@@ -1,0 +1,55 @@
+(bind_dot) {
+    bind eth0
+    tls /etc/coredns/tls/fullchain.pem /etc/coredns/tls/privkey.pem
+    loadbalance round_robin
+}
+# global local-zone
+tls://html-load.com.:853 {
+    import bind_dot
+    forward . 127.0.255.0:1053 {
+        except fb.html-load.com.
+    }
+    forward . 127.0.6.1:1053
+}
+tls://push.apple.com.:853 {
+    file /usr/local/etc/coredns/zone/push.apple.com push.apple.com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+tls://com.:853 {
+    import bind_dot
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+tls://org.:853 {
+    import bind_dot
+    file /usr/local/etc/coredns/zone/org org. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+tls://jp.:853 {
+    import bind_dot
+    file /usr/local/etc/coredns/zone/jp jp. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+tls://tv.:853 {
+    import bind_dot
+    file /usr/local/etc/coredns/zone/tv tv. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+
+tls://.:853 {
+    import bind_dot
+    forward . 127.0.255.0:1153 {
+        except video.twimg.com.
+    }
+    forward . 127.0.6.1:1053
+}

@@ -1,0 +1,17 @@
+$ORIGIN ocn.
+$TTL 10800
+
+@   IN  SOA dns.ocn. admin.ocn. (
+        2026031201 ; Serial (YYYYMMDDnn)
+        3600       ; Refresh (1 hour)
+        900        ; Retry   (15 minutes)
+        1209600    ; Expire  (14 days)
+        300        ; Minimum (5 minutes)
+)
+
+@                       10800  IN  NS    dns.ocn.
+
+dns                     10800  IN  AAAA  2001:380:0:4::3
+dns                     10800  IN  AAAA  2001:380:0:4::4
+osa.dns                 10800  IN  AAAA  2001:380:0:104::3
+osa.dns                 10800  IN  AAAA  2001:380:0:104::4

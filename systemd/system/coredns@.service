@@ -1,0 +1,17 @@
+[Unit]
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Restart=always
+RestartSec=2s
+Type=simple
+User=coredns
+Group=coredns
+ExecStart=/usr/bin/coredns -conf /usr/local/etc/coredns/Corefile@%i
+
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

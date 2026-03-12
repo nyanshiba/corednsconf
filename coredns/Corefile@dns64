@@ -1,0 +1,55 @@
+(nodata_https) {
+    template IN HTTPS {
+        authority "{{ .Name }} 300 IN SOA rfc9460.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
+    }
+}
+.:6453 {
+    bind 127.0.64.1
+    dns64 {
+        prefix 64:ff9b:1:1::/96
+        translate_all
+        allow_ipv4
+    }
+    import nodata_https
+    forward . 127.0.6.1:1053
+}
+.:6453 {
+    bind 127.0.64.4
+    dns64 {
+        prefix 64:ff9b:1:4::/96
+        translate_all
+        allow_ipv4
+    }
+    import nodata_https
+    forward . 127.0.6.1:1053
+}
+.:6453 {
+    bind 127.0.64.10
+    dns64 {
+        prefix 64:ff9b:1:10::/96
+        translate_all
+        allow_ipv4
+    }
+    import nodata_https
+    forward . 127.0.6.1:1053
+}
+.:6453 {
+    bind 127.0.64.20
+    dns64 {
+        prefix 64:ff9b:1:20::/96
+        translate_all
+        allow_ipv4
+    }
+    import nodata_https
+    forward . 127.0.6.1:1053
+}
+.:6453 {
+    bind 127.0.64.35
+    dns64 {
+        prefix 64:ff9b:1:35::/96
+        translate_all
+        allow_ipv4
+    }
+    import nodata_https
+    forward . 127.0.6.1:1053
+}

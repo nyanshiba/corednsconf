@@ -1,0 +1,15 @@
+$ORIGIN tv.
+$TTL 10800
+
+@   IN  SOA dns.internal. admin.internal. (
+        2026031201 ; Serial (YYYYMMDDnn)
+        3600       ; Refresh (1 hour)
+        900        ; Retry   (15 minutes)
+        1209600    ; Expire  (14 days)
+        300        ; Minimum (5 minutes)
+)
+
+@                       10800  IN  NS    dns.internal.
+
+; IPv6
+twitch.tv. 900 IN CNAME dualstack.h2.twitch.map.fastly.net.

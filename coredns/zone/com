@@ -1,0 +1,124 @@
+$ORIGIN com.
+$TTL 10800
+
+@   IN  SOA dns.internal. admin.internal. (
+        2026031201 ; Serial (YYYYMMDDnn)
+        3600       ; Refresh (1 hour)
+        900        ; Retry   (15 minutes)
+        1209600    ; Expire  (14 days)
+        300        ; Minimum (5 minutes)
+)
+
+@                       10800  IN  NS    dns.internal.
+
+; Use GGC for captive portals
+; http://connectivitycheck.gstatic.com/generate_204
+connectivitycheck.gstatic.com. 60 IN AAAA 2001:380:0:1200::c
+connectivitycheck.gstatic.com. 60 IN AAAA 2001:380:0:1201::c
+connectivitycheck.gstatic.com. 60 IN AAAA 2001:380:0:1202::c
+connectivitycheck.gstatic.com. 60 IN AAAA 2001:380:0:1203::c
+; http://clients3.google.com/generate_204
+clients3.google.com. 60 IN AAAA 2001:380:0:1200::c
+clients3.google.com. 60 IN AAAA 2001:380:0:1201::c
+clients3.google.com. 60 IN AAAA 2001:380:0:1202::c
+clients3.google.com. 60 IN AAAA 2001:380:0:1203::c
+
+; NTP
+time.windows.com. 10800 IN CNAME ntp.home.arpa.
+time.apple.com. 10800 IN CNAME ntp.home.arpa.
+time-ios.apple.com. 10800 IN CNAME ntp.home.arpa.
+time-macos.apple.com. 10800 IN CNAME ntp.home.arpa.
+time.asia.apple.com. 10800 IN CNAME ntp.home.arpa.
+time.euro.apple.com. 10800 IN CNAME ntp.home.arpa.
+time1.apple.com. 10800 IN CNAME ntp.home.arpa.
+time2.apple.com. 10800 IN CNAME ntp.home.arpa.
+time3.apple.com. 10800 IN CNAME ntp.home.arpa.
+time4.apple.com. 10800 IN CNAME ntp.home.arpa.
+time5.apple.com. 10800 IN CNAME ntp.home.arpa.
+time6.apple.com. 10800 IN CNAME ntp.home.arpa.
+time7.apple.com. 10800 IN CNAME ntp.home.arpa.
+time.google.com. 10800 IN CNAME ntp.home.arpa.
+time1.google.com. 10800 IN CNAME ntp.home.arpa.
+time2.google.com. 10800 IN CNAME ntp.home.arpa.
+time3.google.com. 10800 IN CNAME ntp.home.arpa.
+time4.google.com. 10800 IN CNAME ntp.home.arpa.
+time.facebook.com. 10800 IN CNAME ntp.home.arpa.
+time1.facebook.com. 10800 IN CNAME ntp.home.arpa.
+time2.facebook.com. 10800 IN CNAME ntp.home.arpa.
+time3.facebook.com. 10800 IN CNAME ntp.home.arpa.
+time4.facebook.com. 10800 IN CNAME ntp.home.arpa.
+time.cloudflare.com. 10800 IN CNAME ntp.home.arpa.
+
+; IPv6
+x.com. 300 IN A 199.232.150.146
+x.com. 300 IN A 199.232.214.146
+x.com. 300 IN AAAA 2a04:4e42:600::658
+x.com. 300 IN AAAA 2a04:4e42:8c::658
+api.twitter.com. 300 IN A 199.232.150.146
+api.twitter.com. 300 IN A 199.232.214.146
+api.twitter.com. 300 IN AAAA 2a04:4e42:600::658
+api.twitter.com. 300 IN AAAA 2a04:4e42:8c::658
+abs.twimg.com. 300 IN A 104.18.39.59
+abs.twimg.com. 300 IN A 172.64.148.197
+abs.twimg.com. 300 IN AAAA 2606:4700::6812:273b
+abs.twimg.com. 300 IN AAAA 2606:4700::ac40:94c5
+pbs.twimg.com. 300 IN A 199.232.240.159
+pbs.twimg.com. 300 IN A 146.75.112.159
+pbs.twimg.com. 300 IN AAAA 2a04:4e42:8c::157
+pbs.twimg.com. 300 IN AAAA 2a04:4e42:8c::158
+pbs.twimg.com. 300 IN AAAA 2a04:4e42:600::159
+pbs.twimg.com. 300 IN AAAA 2a04:4e42:600::160
+pbs.twimg.com. 300 IN AAAA 2a04:4e42:400::157
+video.twimg.com. 300 IN A 199.232.240.159
+video.twimg.com. 300 IN A 146.75.112.159
+video.twimg.com. 300 IN AAAA 2a04:4e42:8c::157
+video.twimg.com. 300 IN AAAA 2a04:4e42:8c::158
+video.twimg.com. 300 IN AAAA 2a04:4e42:600::159
+video.twimg.com. 300 IN AAAA 2a04:4e42:600::160
+video.twimg.com. 300 IN AAAA 2a04:4e42:400::157
+
+github.githubassets.com. 300 IN AAAA 2606:50c0:8000::154
+github.githubassets.com. 300 IN AAAA 2606:50c0:8001::154
+github.githubassets.com. 300 IN AAAA 2606:50c0:8002::154
+github.githubassets.com. 300 IN AAAA 2606:50c0:8003::154
+githubusercontent.com. 300 IN AAAA 2606:50c0:8000::133
+githubusercontent.com. 300 IN AAAA 2606:50c0:8001::133
+githubusercontent.com. 300 IN AAAA 2606:50c0:8002::133
+githubusercontent.com. 300 IN AAAA 2606:50c0:8003::133
+github-cloud.githubusercontent.com. 300 IN AAAA 2606:50c0:8000::154
+github-cloud.githubusercontent.com. 300 IN AAAA 2606:50c0:8001::154
+github-cloud.githubusercontent.com. 300 IN AAAA 2606:50c0:8002::154
+github-cloud.githubusercontent.com. 300 IN AAAA 2606:50c0:8003::154
+github-registry-files.githubusercontent.com. 300 IN AAAA 2606:50c0:8000::154
+github-registry-files.githubusercontent.com. 300 IN AAAA 2606:50c0:8001::154
+github-registry-files.githubusercontent.com. 300 IN AAAA 2606:50c0:8002::154
+github-registry-files.githubusercontent.com. 300 IN AAAA 2606:50c0:8003::154
+
+nature.com. 900 IN CNAME dualstack.springer2.map.fastly.net.
+go.nature.com. 900 IN CNAME springer2.map.fastly.net.
+idp.nature.com. 900 IN CNAME springer2.map.fastly.net.
+springernature.com. 900 IN CNAME dualstack.springer2.map.fastly.net.
+www.nytimes.com. 900 IN AAAA 2a04:4e42:600::368
+www.nytimes.com. 900 IN AAAA 2a04:4e42:600::420
+static01.nyt.com. 900 IN AAAA 2a04:4e42:600::368
+static01.nyt.com. 900 IN AAAA 2a04:4e42:600::420
+godfield.net. 1800 IN AAAA 2a04:4e42:600::451
+godfield.net. 1800 IN AAAA 2a04:4e42:8c::451
+stripe.com. 1800 IN AAAA 2a04:4e42:600::176
+www.bloomberg.com. 1800 IN AAAA 2a04:4e42:600::329
+
+; Opt-outs
+www.bing.com. 300 IN CNAME nochatstrict.bing.com.
+edgeservices.bing.com. 300 IN CNAME nochatstrict.bing.com.
+duckduckgo.com. 300 IN CNAME safe.duckduckgo.com.
+www.youtube-nocookie.com. 3600 IN CNAME restrictmoderate.youtube.com.
+
+; Anycast Google
+www.google.com. 300 IN AAAA 2001:4860:4826:7700::
+www.google.com. 300 IN AAAA 2001:4860:4827:7700::
+www.google.com. 300 IN AAAA 2001:4860:4828:7700::
+www.google.com. 300 IN AAAA 2001:4860:4829:7700::
+www.google.com. 300 IN AAAA 2001:4860:482a:7700::
+www.google.com. 300 IN AAAA 2001:4860:482b:7700::
+www.google.com. 300 IN AAAA 2001:4860:482c:7700::
+www.google.com. 300 IN AAAA 2001:4860:482d:7700::

@@ -1,0 +1,782 @@
+(bind_dns64) {
+}
+(bind_dns64p) {
+}
+(bind_ipv6) {
+}
+(bind_ipv4) {
+}
+(nodata_a) {
+    template IN A {
+        authority "{{ .Name }} 33 IN SOA draft-hazeyama-sunset4-dns-a-filter-00.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+}
+# downstream
+# internal local-zone
+home.arpa.:53 {
+    bind eth0
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/home.arpa home.arpa.
+}
+internal.:53 {
+    bind eth0
+    file /usr/local/etc/coredns/zone/internal internal.
+}
+flets.:53 {
+    bind eth0
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/flets flets.
+}
+ocn.:53 {
+    bind eth0
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/ocn ocn.
+}
+pool.ntp.org.:53 {
+    bind eth0
+    template ANY ANY {
+      answer  "{{ .Name }} 123 IN CNAME ntp.home.arpa."
+        authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+    forward . 127.0.6.1:1053
+}
+html-load.com.:53 {
+    import bind_dns64
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/html-load.com html-load.com. {
+        fallthrough
+    }
+    forward . 127.0.255.0:1153 {
+        except fb.html-load.com.
+    }
+    forward . 127.0.6.1:1053
+}
+html-load.com.:53 {
+    import bind_ipv4
+    forward . 127.0.255.0:1153 {
+        except fb.html-load.com.
+    }
+    forward . 127.0.6.1:1053
+}
+
+# global local-zone
+5ch.net.:53 2ch.net.:53 {
+    bind eth0
+    template IN HTTPS {
+      match "(\w+)\.[25]ch\.net\.$"  
+      answer  "{{ index .Match 1 }}.{{ .Zone }} 900 IN HTTPS 0 {{ index .Match 1 }}.5ch.io."
+        authority "{{ .Name }} 900 IN SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+    template ANY ANY {
+        authority "{{ .Name }} 900 {{ .Class }} SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+}
+push.apple.com.:53 {
+    import bind_dns64
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/push.apple.com push.apple.com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+com.:53 {
+    import bind_ipv6
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+net.:53 {
+    import bind_ipv6
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/net net. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+jp.:53 {
+    bind eth0
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/jp jp. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+tv.:53 {
+    bind eth0
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/tv tv. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+
+# DNS64
+# native: requires "Local Network" permission on Apple iOS
+# system, web: anyone can use nyanshiba/nat64-on-link
+
+# MAP-E/PPPoE LB
+## web
+syosetu.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.64.0:6453 127.0.64.1:6453
+}
+
+# tayga@pp01
+## system
+apple.com.:53 {
+    import bind_dns64
+    forward . 127.0.6.1:1053 {
+        except guzzoni.apple.com.
+        except sequoia.apple.com.
+    }
+    forward . 127.0.64.1:6453
+}
+
+
+## web
+ipinfo.io.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:1::/96
+    forward . 127.0.6.1:1053
+}
+wifimireru.inonius.net.:53 {
+    import bind_dns64
+    dns64 {
+        prefix 64:ff9b:1:1::/96
+        translate_all
+    }
+    forward . 127.0.6.1:1053
+}
+
+## native
+
+
+# tayga@tu10
+## system
+
+
+# tayga@tu20
+## web
+aftrmgmt.s.sdconw.com.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:20::/96
+    forward . 127.0.6.1:1053
+}
+
+
+# tayga@warp
+## system
+sessionserver.mojang.com.:53 mc.hypixel.net.:53 {
+    import bind_dns64
+    dns64 {
+        prefix 64:ff9b:1:35::/96
+        translate_all
+    }
+    forward . 127.0.6.1:1053
+}
+cloudflare.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.6.1:1053 {
+        except apple-relay.cloudflare.com.
+        except challenges.cloudflare.com.
+        except crypto.cloudflare.com.
+    }
+    forward . 127.0.64.35:6453
+}
+
+## native
+twitter.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    forward . 127.0.64.35:6453
+}
+x.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    forward . 127.0.64.35:6453 # force IPv6 to disable ads
+}
+twimg.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/twimg.com twimg.com. { # use Fastly
+        fallthrough
+    }
+    forward . 127.0.6.1:1053 {
+        except abs.twimg.com.
+        except abs-0.twimg.com.
+        except abs-zero.twimg.com.
+    }
+    forward . 127.0.64.35:6453 # force warp
+}
+t.co.:53 discord.com.:53 discordapp.com.:53 discord.gg.:53 discordapp.net.:53 chatgpt.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.64.35:6453
+}
+
+## web
+cdn.cloudflare.net.:53 pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 sciencedirect.com.:53 sciencedirectassets.com.:53 elsevier.com.:53 stackoverflow.com.:53 sstatic.net.:53 feedly.com.:53 deepl.com.:53 quora.com.:53 tsmc.com.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:35::/96 # merge DNS64 and IPv6
+    forward . 127.0.6.1:1053
+}
+copilot.microsoft.com.:53 rfc-editor.org.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 {
+    import bind_dns64
+    import nodata_a
+    forward . 127.0.64.35:6453 # force DNS64
+}
+radiko.jp.:53 {
+    import bind_dns64
+    forward . 127.0.6.1:1053 {
+        except api.radiko.jp.
+        except cf.radiko.jp.
+    }
+    forward . 127.0.64.35:6453
+}
+
+# other
+.:53 {
+    bind eth0
+    forward . 127.0.6.1:1053
+}
+
+# upstream
+flets-east.jp.:1053 iptvf.jp.:1053 4over6.info.:1053 {
+    bind 127.0.6.1
+    cache {
+        serve_stale 24h immediate
+    }
+    forward . 2404:1a8:7f01:b::3 2404:1a8:7f01:a::3 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+    }
+}
+v4flets-east.jp.:1053 {
+    bind 127.0.6.1
+    cache {
+        serve_stale 24h immediate
+    }
+    forward . 123.107.190.7 123.107.190.8 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+    }
+}
+# always_nodata with SOA
+.:1153 {
+    bind 127.0.255.0
+    template ANY ANY {
+        authority "{{ .Name }} 5782 IN SOA ns1.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
+    }
+}
+# resolver
+.:1053 {
+    bind 127.0.6.1
+    #multisocket 5
+    template IN HTTPS {
+        authority "{{ .Name }} 300 IN SOA rfc9460.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
+    }
+    
+    cache {
+        serve_stale 24h immediate
+    }
+    minimal
+    loadbalance round_robin
+    
+    forward . 127.0.255.0:1153 {
+        prefer_udp
+
+        # except localhost.
+        # except local.
+        # except onion.
+        # except test.
+        # except invalid.
+        # except arpa.
+        # except wpad.
+        # except flets.
+        # except ocn.
+        # except next.
+        # except cf.
+        # except cat.
+        except com.
+        except net.
+        except org.
+        except edu.
+        except gov.
+        except mil.
+        except int.
+        except info.
+        except biz.
+        except blue.
+        except name.
+        # except museum.
+        # except aero.
+        # except coop.
+        # except jobs.
+        # except travel.
+        except mobi.
+        # except cat.
+        # except tel.
+        except xxx.
+        # except post.
+        except app.
+        except art.
+        except asia.
+        except apple.
+        except aws.
+        except beauty.
+        except blog.
+        # except bond. # threatfox
+        except camera.
+        except canon.
+        except care.
+        except charity.
+        # except click. # threatfox
+        except clinic.
+        except cloud.
+        # except cyou. # threatfox
+        except design.
+        except dev.
+        except earth.
+        except email.
+        except exchange.
+        # except eth.
+        except fish.
+        # except fun. # threatfox
+        except fyi.
+        except gl.
+        except gle.
+        except global.
+        except google.
+        except graphics.
+        except healthcare.
+        except honda.
+        except how.
+        except inc.
+        except ink.
+        except java.
+        except link.
+        # except live. # threatfox
+        except ltd.
+        except maison.
+        except media.
+        except microsoft.
+        except moe.
+        except network.
+        except news.
+        except nhk.
+        except nico.
+        except ntt.
+        # except online. # threatfox
+        except pictures.
+        except pioneer.
+        except press.
+        except red.
+        except report.
+        except run.
+        except science.
+        except security.
+        except sharp.
+        # except shop. # threatfox
+        except social.
+        except stream.
+        except studio.
+        except style.
+        # except site. # threatfox
+        except softbank.
+        except space.
+        except store.
+        except support.
+        except tax.
+        except tokyo.
+        except town.
+        except toyota.
+        except tech.
+        except tools.
+        # except top. # threatfox
+        except toshiba.
+        except video.
+        except wiki.
+        except work.
+        # except xyz. # threatfox
+        except youtube.
+        
+        # ccTLD
+        # except ac.
+        # except ad.
+        except ae.
+        # except af.
+        except ag.
+        except ai.
+        except al.
+        except am.
+        # except an.
+        # except ao.
+        # except aq.
+        except ar.
+        # except as.
+        except at.
+        except au.
+        # except aw.
+        # except ax.
+        # except az.
+        # except ba.
+        # except bb.
+        # except bd.
+        except be.
+        # except bf.
+        except bg.
+        # except bh.
+        # except bi.
+        # except bj.
+        # except bl.
+        # except bm.
+        # except bn.
+        # except bo.
+        # except bq.
+        # except br.
+        # except bs.
+        # except bt.
+        # except bv.
+        # except bw.
+        # except by.
+        except bz.
+        except ca.
+        except cc.
+        # except cd.
+        # except cf.
+        # except cg.
+        except ch.
+        # except ci.
+        # except ck.
+        # except cl.
+        # except cm.
+        # except cn.
+        except co.
+        # except cr.
+        # except cu.
+        # except cv.
+        # except cw.
+        except cx.
+        # except cy.
+        except cz.
+        except de.
+        # except dj.
+        # except dk.
+        # except dm.
+        except do.
+        # except dz.
+        except ec.
+        except ee.
+        # except eg.
+        # except eh.
+        # except er.
+        except es.
+        except et.
+        except eu.
+        except fi.
+        # except fj.
+        # except fk.
+        except fm.
+        # except fo.
+        except fr.
+        # except ga.
+        # except gb.
+        except gd.
+        # except ge.
+        # except gf.
+        except gg.
+        # except gh.
+        # except gi.
+        # except gl.
+        # except gm.
+        # except gn.
+        # except gp.
+        # except gq.
+        # except gt.
+        except gr.
+        # except gs.
+        # except gu.
+        # except gw.
+        # except gy.
+        # except hk.
+        # except hm.
+        # except hn.
+        # except hr.
+        # except ht.
+        # except hu.
+        # except id.
+        except ie.
+        # except il.
+        except im.
+        # except in.
+        except io.
+        # except iq.
+        # except ir.
+        except is.
+        except it.
+        # except je.
+        # except jm.
+        # except jo.
+        except jp.
+        # except ke.
+        # except kg.
+        # except kh.
+        # except ki.
+        # except km.
+        # except kn.
+        # except kp.
+        except kr.
+        # except kw.
+        # except ky.
+        # except kz.
+        except la.
+        # except lb.
+        # except lc.
+        # except li.
+        # except lk.
+        # except lr.
+        # except ls.
+        # except lt.
+        # except lu.
+        # except lv.
+        except ma.
+        # except mc.
+        # except md.
+        except me.
+        # except mf.
+        # except mg.
+        # except mh.
+        # except mk.
+        # except ml.
+        # except mm.
+        # except mn.
+        # except mo.
+        # except mp.
+        # except mq.
+        # except mr.
+        except ms.
+        # except mt.
+        except mu.
+        # except mw.
+        # except mv.
+        # except mx.
+        # except my.
+        # except mz.
+        # except na.
+        # except nc.
+        # except ne.
+        # except nf.
+        except ng.
+        # except ni.
+        except nl.
+        except no.
+        # except np.
+        # except nr.
+        except nu.
+        except nz.
+        # except om.
+        # except pa.
+        # except pe.
+        # except pf.
+        # except pg.
+        except ph.
+        # except pk.
+        except pl.
+        except pm.
+        # except pn.
+        # except pr.
+        # except ps.
+        # except pt.
+        # except pw.
+        # except py.
+        # except qa.
+        except re.
+        # except ro.
+        except rs.
+        # except ru. # threatfox
+        # except rw.
+        # except sa.
+        # except sb.
+        # except sc.
+        # except sd.
+        except se.
+        # except sg.
+        except sh.
+        # except si.
+        # except sj.
+        # except sk.
+        # except sl.
+        # except sm.
+        # except sn.
+        except so.
+        # except sr.
+        # except ss.
+        except st.
+        # except su.
+        # except sv.
+        # except sx.
+        # except sy.
+        # except sz.
+        # except tc.
+        # except td.
+        # except tf.
+        # except tg.
+        # except th.
+        # except tj.
+        # except tk.
+        # except tl.
+        # except tm.
+        # except tn.
+        except to.
+        # except tp.
+        # except tr.
+        except tt.
+        except tv.
+        except tw.
+        # except tz.
+        # except ua.
+        # except ug.
+        except uk.
+        # except um.
+        except us.
+        # except uy.
+        # except uz.
+        # except va.
+        except vc.
+        # except ve.
+        except vg.
+        # except vi.
+        # except vn.
+        # except vu.
+        # except wf.
+        # except world.
+        except ws.
+        # except ye.
+        # except yt.
+        except za.
+        # except zm.
+        # except zw.
+    }
+    forward . 2404:1a8:7f01:b::3 2404:1a8:7f01:a::3 2001:380:0:4::3 2001:380:0:4::4 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+        
+        except pool.ntp.org.
+	    except use-application-dns.net.
+
+        # SERVFAILs
+        except 5ch.net.
+        except 2ch.net.
+        except anpi.jp.
+        except osdn.jp.
+        except eaccess.net.
+
+        # https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+        except repo.jing.rocks.
+        except mirror.nyist.edu.cn.
+        except mirrors.tuna.tsinghua.edu.cn.
+        except mirrors.huaweicloud.com.
+        except mirror.freedif.org.
+        except mirror.hoster.kz.
+        except mirrors.bfsu.edu.cn.
+        except mirrors.neusoft.edu.cn.
+        except mirrors.ipserverone.com.
+        except mirrors.jlu.edu.cn.
+        # https://mirrormanager.fedoraproject.org/mirrors/Fedora/development/x86_64
+        except aliyun.com.
+        except 163.com.
+        except sohu.com.
+        except yun-idc.com.
+        except cicku.me.
+        
+        # Admiral
+        except getadmiral.com.
+        except cdnral.com.
+        except acidpigs.com.
+        except aloofvest.com.
+        except ancientact.com.
+        except childlikeform.com.
+        except chimpstatic.com.
+        except fearlessfaucet.com.
+        except functionalfeather.com.
+        except livelylaugh.com.
+        except modularmental.com.
+        except reconditerespect.com.
+        except scarfsmash.com.
+        except selfishsnake.com.
+        except shutto-translation.com.
+        except smoggysnakes.com.
+        except succeedscene.com.
+        except summerhamster.com.
+        except superficialspring.com.
+        except tangyamount.com.
+        except tranquilcanyon.com.
+        except uninterestedquarter.com.
+        except featherstage.com.
+        except amuckafternoon.com.
+        except guidecent.com.
+        except scaredsnakes.com.
+        except pointdigestion.com.
+        except dependenttrip.com.
+        except merequartz.com.
+        except bawdybalance.com.
+        except scarceshock.com.
+        except politeplanes.com.
+        except echochief.com.
+        except freakyglass.com.
+        except ubiquitoussea.com.
+        except tranquilveranda.com.
+        except askdriver.com.
+        except ambrosialsummit.com.
+        except scenicdrops.com.
+        
+        # Ad-Shield
+        except content-loader.com.
+        except r66net.net.
+        except videostep.com.
+        except ughmouldhusky.com.
+        except css-load.com.
+        except html-load.cc.
+        except img-load.com.
+    }
+    forward . 127.0.255.0:1153 {
+        prefer_udp
+    }
+
+    # use dns64warp
+    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net.
+    rewrite continue cname exact twimg.twitter.map.fastly.net. abs.twimg.com.cdn.cloudflare.net.
+
+    # IPv6
+    #rewrite continue cname exact dynamic.x.com.cdn.cloudflare.net. dynamic.x.map.fastly.net. 
+    rewrite continue cname exact reddit.map.fastly.net. dualstack.h3.reddit.map.fastly.net.
+    rewrite continue cname exact h2.twitch.map.fastly.net. dualstack.h2.twitch.map.fastly.net.
+    rewrite continue cname exact n.sni.global.fastly.net. dualstack.n.sni.global.fastly.net.
+    #rewrite continue cname exact apac-asia-courier-4.push-apple.com.akadns.net. apac-asia-courier-vs.push-apple.com.akadns.net.
+    
+    ## https://codeberg.org/IPv6-Monostack/delegacy-rpz/#2-primary-with-zonefile
+    rewrite continue cname exact p2.shared.global.fastly.net. dualstack.p2.shared.global.fastly.net.
+    rewrite continue cname exact s3-1-w.amazonaws.com. s3-w.dualstack.us-east-1.amazonaws.com.
+
+    # cname cloaking
+    rewrite continue cname suffix html-load.cc. invalid.
+    rewrite continue cname suffix gateway.dev. invalid.
+    rewrite continue cname suffix cloudflare-dns.com. invalid.
+    rewrite continue cname suffix cloudflare-gateway.com. invalid.
+}
