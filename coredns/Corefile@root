@@ -758,6 +758,14 @@ v4flets-east.jp.:1053 {
     forward . 127.0.255.0:1153 {
         prefer_udp
     }
+    
+    # gtm.js
+    rewrite stop name regex ^gtm\. invalid.
+    rewrite stop name regex ^mstm\. invalid.
+    rewrite stop name regex ^sgtm\. invalid.
+    rewrite stop name regex ^ssc\. invalid.
+    rewrite stop name regex ^sst\. invalid.
+    rewrite stop name regex ^ssgtm\. invalid.
 
     # use dns64warp
     rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net.
@@ -765,7 +773,7 @@ v4flets-east.jp.:1053 {
 
     # IPv6
     #rewrite continue cname exact dynamic.x.com.cdn.cloudflare.net. dynamic.x.map.fastly.net. 
-    rewrite continue cname exact reddit.map.fastly.net. dualstack.h3.reddit.map.fastly.net.
+    rewrite continue cname exact reddit.map.fastly.net. dualstack.reddit.map.fastly.net.
     rewrite continue cname exact h2.twitch.map.fastly.net. dualstack.h2.twitch.map.fastly.net.
     rewrite continue cname exact n.sni.global.fastly.net. dualstack.n.sni.global.fastly.net.
     #rewrite continue cname exact apac-asia-courier-4.push-apple.com.akadns.net. apac-asia-courier-vs.push-apple.com.akadns.net.

@@ -12,6 +12,7 @@ tls://html-load.com.:853 {
     forward . 127.0.6.1:1053
 }
 tls://push.apple.com.:853 {
+    import bind_dot
     file /usr/local/etc/coredns/zone/push.apple.com push.apple.com. {
         fallthrough
     }
