@@ -69,13 +69,6 @@ pbs.twimg.com. 300 IN AAAA 2a04:4e42:8c::158
 pbs.twimg.com. 300 IN AAAA 2a04:4e42:600::159
 pbs.twimg.com. 300 IN AAAA 2a04:4e42:600::160
 pbs.twimg.com. 300 IN AAAA 2a04:4e42:400::157
-video.twimg.com. 300 IN A 199.232.240.159
-video.twimg.com. 300 IN A 146.75.112.159
-video.twimg.com. 300 IN AAAA 2a04:4e42:8c::157
-video.twimg.com. 300 IN AAAA 2a04:4e42:8c::158
-video.twimg.com. 300 IN AAAA 2a04:4e42:600::159
-video.twimg.com. 300 IN AAAA 2a04:4e42:600::160
-video.twimg.com. 300 IN AAAA 2a04:4e42:400::157
 
 github.githubassets.com. 300 IN AAAA 2606:50c0:8000::154
 github.githubassets.com. 300 IN AAAA 2606:50c0:8001::154

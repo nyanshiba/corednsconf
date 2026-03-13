@@ -6,7 +6,7 @@
 # global local-zone
 tls://html-load.com.:853 {
     import bind_dot
-    forward . 127.0.255.0:1053 {
+    forward . 127.0.255.0:1153 {
         except fb.html-load.com.
     }
     forward . 127.0.6.1:1053
@@ -23,7 +23,11 @@ tls://com.:853 {
     file /usr/local/etc/coredns/zone/com com. {
         fallthrough
     }
-    forward . 127.0.6.1:1053
+    forward . 127.0.6.1:1053 {
+        except googlevideo.com.
+        except video.twimg.com.
+    }
+    forward . 127.0.255.0:1153
 }
 tls://org.:853 {
     import bind_dot
@@ -37,7 +41,10 @@ tls://jp.:853 {
     file /usr/local/etc/coredns/zone/jp jp. {
         fallthrough
     }
-    forward . 127.0.6.1:1053
+    forward . 127.0.6.1:1053 {
+        except app.jrepoint.jp. # offline mode
+    }
+    forward . 127.0.255.0:1153
 }
 tls://tv.:853 {
     import bind_dot
@@ -49,8 +56,5 @@ tls://tv.:853 {
 
 tls://.:853 {
     import bind_dot
-    forward . 127.0.255.0:1153 {
-        except video.twimg.com.
-    }
     forward . 127.0.6.1:1053
 }
