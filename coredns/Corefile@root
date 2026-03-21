@@ -180,12 +180,14 @@ sessionserver.mojang.com.:53 mc.hypixel.net.:53 {
 cloudflare.com.:53 {
     import bind_dns64p
     import nodata_a
-    forward . 127.0.6.1:1053 {
+    forward . 127.0.64.35:6453 {
         except apple-relay.cloudflare.com.
-        except challenges.cloudflare.com.
+        #except challenges.cloudflare.com.
         except crypto.cloudflare.com.
+        except radar.cloudflare.com.
+        except speed.cloudflare.com.
     }
-    forward . 127.0.64.35:6453
+    forward . 127.0.6.1:1053
 }
 
 ## native
@@ -228,12 +230,12 @@ t.co.:53 discord.com.:53 discordapp.com.:53 discord.gg.:53 discordapp.net.:53 ch
 }
 
 ## web
-cdn.cloudflare.net.:53 pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 sciencedirect.com.:53 sciencedirectassets.com.:53 elsevier.com.:53 stackoverflow.com.:53 sstatic.net.:53 feedly.com.:53 deepl.com.:53 quora.com.:53 tsmc.com.:53 {
+cdn.cloudflare.net.:53 pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 elsevier.com.:53 elsevierhealth.com.:53 cell.com.:53 sciencedirectassets.com.:53 sagepub.com.:53 stackoverflow.com.:53 sstatic.net.:53 feedly.com.:53 quora.com.:53 tsmc.com.:53 {
     import bind_dns64
     dns64 64:ff9b:1:35::/96 # merge DNS64 and IPv6
     forward . 127.0.6.1:1053
 }
-copilot.microsoft.com.:53 rfc-editor.org.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 {
+copilot.microsoft.com.:53 rfc-editor.org.:53 archive.org.:53 acm.org.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 dropboxstatic.com.:53 {
     import bind_dns64
     import nodata_a
     forward . 127.0.64.35:6453 # force DNS64
