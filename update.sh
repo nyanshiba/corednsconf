@@ -2,7 +2,7 @@
 
 server=coredns.fro
 if [ "$1" == "" ]; then
-  daemons="systemd-networkd coredns@root coredns@dot coredns@dns64"
+  daemons="coredns@root coredns@dot coredns@dns64"
 else
   daemons=$@
 fi
