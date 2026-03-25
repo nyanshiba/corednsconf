@@ -14,6 +14,16 @@
     forward . 127.0.6.1:1053
 }
 .:6453 {
+    bind 127.0.64.3
+    import qtype_a_aaaa
+    dns64 {
+        prefix 64:ff9b:1:3::/96
+        translate_all
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
+.:6453 {
     bind 127.0.64.4
     import qtype_a_aaaa
     dns64 {
@@ -55,6 +65,7 @@
 }
 .:6453 {
     bind 127.0.64.1
+    bind 127.0.64.3
     bind 127.0.64.4
     bind 127.0.64.10
     bind 127.0.64.20
