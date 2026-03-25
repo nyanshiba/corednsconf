@@ -1,4 +1,5 @@
 coredns/zone/home.arpa
 coredns/zone/internal
+coredns/zone/nyanshiba.com
 letsencrypt/renewal-hooks/deploy/
 systemd/network/eth0.network.d/address.conf

@@ -11,15 +11,24 @@ tls://html-load.com.:853 {
     }
     forward . 127.0.6.1:1053
 }
-tls://push.apple.com.:853 {
+tls://connectivitycheck.gstatic.com.:853 tls://clients3.google.com.:853 {
     import bind_dot
-    file /usr/local/etc/coredns/zone/push.apple.com push.apple.com. {
-        fallthrough
-    }
     forward . 127.0.6.1:1053
 }
 tls://com.:853 {
     import bind_dot
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/twimg.com twimg.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/nyanshiba.com nyanshiba.com. {
+        fallthrough
+    }
     file /usr/local/etc/coredns/zone/com com. {
         fallthrough
     }
@@ -29,32 +38,20 @@ tls://com.:853 {
     }
     forward . 127.0.255.0:1153
 }
-tls://org.:853 {
+
+tls://.:853 {
     import bind_dot
-    file /usr/local/etc/coredns/zone/org org. {
+    file /usr/local/etc/coredns/zone/net net. {
         fallthrough
     }
-    forward . 127.0.6.1:1053
-}
-tls://jp.:853 {
-    import bind_dot
     file /usr/local/etc/coredns/zone/jp jp. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/tv tv. {
         fallthrough
     }
     forward . 127.0.6.1:1053 {
         except app.jrepoint.jp. # offline mode
     }
     forward . 127.0.255.0:1153
-}
-tls://tv.:853 {
-    import bind_dot
-    file /usr/local/etc/coredns/zone/tv tv. {
-        fallthrough
-    }
-    forward . 127.0.6.1:1053
-}
-
-tls://.:853 {
-    import bind_dot
-    forward . 127.0.6.1:1053
 }
