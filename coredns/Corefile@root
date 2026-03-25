@@ -1,10 +1,30 @@
 (bind_dns64) {
+    multisocket 4
+    rewrite ttl suffix . 30-
 }
 (bind_dns64p) {
+    multisocket 4
+    rewrite ttl suffix . 30-
 }
 (bind_ipv6) {
+    multisocket 4
+    rewrite ttl suffix . 30-
 }
 (bind_ipv4) {
+    bind 10.0.8.53
+    multisocket 4
+    rewrite ttl suffix . 30-
+    view sinkhole {
+        expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
+    }
+}
+(bind_private) {
+    bind eth0
+    multisocket 4
+    rewrite ttl suffix . 30-
+    view sinkhole {
+        expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
+    }
 }
 (nodata_a) {
     template IN A {
@@ -13,7 +33,7 @@
 }
 # downstream
 pool.ntp.org.:53 {
-    bind eth0
+    import bind_private
     template ANY ANY {
       answer  "{{ .Name }} 123 IN CNAME ntp.home.arpa."
         authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
@@ -41,7 +61,7 @@ html-load.com.:53 {
 
 # global local-zone
 5ch.net.:53 2ch.net.:53 {
-    bind eth0
+    import bind_private
     template IN HTTPS {
       match "(\w+)\.[25]ch\.net\.$"  
       answer  "{{ index .Match 1 }}.{{ .Zone }} 900 IN HTTPS 0 {{ index .Match 1 }}.5ch.io."
@@ -207,7 +227,7 @@ radiko.jp.:53 {
 
 # other
 .:53 {
-    bind eth0
+    import bind_private
     # internals
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     file /usr/local/etc/coredns/zone/internal internal.
@@ -224,13 +244,34 @@ radiko.jp.:53 {
     }
     forward . 127.0.6.1:1053
 }
-
-# upstream
-flets-east.jp.:1053 iptvf.jp.:1053 4over6.info.:1053 {
-    bind 127.0.6.1
+.:53 {
+    bind eth0
+    multisocket 4
     cache {
         serve_stale 24h immediate
     }
+    forward . 2404:1a8:7f01:b::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+    }
+}
+
+# upstream
+(bind_upstream) {
+    bind 127.0.6.1
+    multisocket 4
+    cache {
+        serve_stale 24h immediate
+    }
+    loadbalance round_robin
+    #minimal
+    log . {
+        class error
+    }
+}
+flets-east.jp.:1053 iptvf.jp.:1053 4over6.info.:1053 {
+    import bind_upstream
     forward . 2404:1a8:7f01:b::3 2404:1a8:7f01:a::3 {
         prefer_udp
         max_fails 0
@@ -238,10 +279,7 @@ flets-east.jp.:1053 iptvf.jp.:1053 4over6.info.:1053 {
     }
 }
 v4flets-east.jp.:1053 {
-    bind 127.0.6.1
-    cache {
-        serve_stale 24h immediate
-    }
+    import bind_upstream
     forward . 123.107.190.7 123.107.190.8 {
         prefer_udp
         max_fails 0
@@ -251,23 +289,17 @@ v4flets-east.jp.:1053 {
 # always_nodata with SOA
 .:1153 {
     bind 127.0.255.0
+    multisocket 4
     template ANY ANY {
         authority "{{ .Name }} 5782 IN SOA ns1.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
     }
 }
 # resolver
 .:1053 {
-    bind 127.0.6.1
-    #multisocket 5
-    template IN HTTPS {
-        authority "{{ .Name }} 300 IN SOA rfc9460.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
+    import bind_upstream
+    view qtypefilter {
+        expr type() in ['A', 'AAAA']
     }
-    
-    cache {
-        serve_stale 24h immediate
-    }
-    minimal
-    loadbalance round_robin
     
     forward . 127.0.255.0:1153 {
         prefer_udp
@@ -759,4 +791,16 @@ v4flets-east.jp.:1053 {
     rewrite continue cname suffix gateway.dev. invalid.
     rewrite continue cname suffix cloudflare-dns.com. invalid.
     rewrite continue cname suffix cloudflare-gateway.com. invalid.
+}
+.:1053 {
+    import bind_upstream
+    forward . 127.0.255.0:1153 {
+        except in-addr.arpa.
+        except ip6.arpa.
+    }
+    forward . 2404:1a8:7f01:a::3 2404:1a8:7f01:b::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
+        prefer_udp
+        max_fails 0
+        #failover SERVFAIL
+    }
 }
