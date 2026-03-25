@@ -286,6 +286,42 @@ v4flets-east.jp.:1053 {
         failover SERVFAIL
     }
 }
+google.com.:1053 googleapis.com.:1053 googleusercontent.com.:1053 ggpht.com.:1053 gstatic.com.:1053 youtube.com.:1053 ytimg.com.:1053 {
+    import bind_upstream
+    forward . 2001:4860:4802:32::a 2001:4860:4802:38::a 2001:4860:4802:36::a 2001:4860:4802:34::a {
+        force_tcp
+        max_fails 0
+        policy sequential
+        failover SERVFAIL
+        
+        except adservice.google.com.
+        except affiliate.googleusercontent.com.
+        except ampcid.google.com.
+        except analytics.google.com.
+        except applecommerce-pa.googleapis.com.
+        except appsitemsuggest-pa.googleapis.com.
+        except ogads-pa.clients6.google.com.
+        except clouderrorreporting.googleapis.com.
+        except contributor.google.com.
+        except crashlyticsreports-pa.googleapis.com.
+        except cse.google.com.
+        except csi.gstatic.com.
+        except displayads-formats.googleusercontent.com.
+        except fundingchoices.google.com.
+        except fundingchoicesmessages.google.com.
+        except growth-pa.googleapis.com.
+        except imasdk.googleapis.com.
+        except jnn-pa.googleapis.com.
+        except khms1.googleapis.com.
+        except gstaticadssl.l.google.com.
+        except lh4.googleusercontent.com.
+        except mail-ads.google.com.
+        except ogads-pa.googleapis.com.
+        except optimizationguide-pa.googleapis.com.
+        except userlocation.googleapis.com.
+    }
+    forward . 127.0.255.0:1153
+}
 # always_nodata with SOA
 .:1153 {
     bind 127.0.255.0

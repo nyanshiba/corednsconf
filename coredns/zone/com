@@ -2,7 +2,7 @@ $ORIGIN com.
 $TTL 10800
 
 @   IN  SOA dns.internal. admin.internal. (
-        2026031201 ; Serial (YYYYMMDDnn)
+        2026032502 ; Serial (YYYYMMDDnn)
         3600       ; Refresh (1 hour)
         900        ; Retry   (15 minutes)
         1209600    ; Expire  (14 days)
@@ -305,13 +305,3 @@ www.bing.com. 300 IN CNAME nochatstrict.bing.com.
 edgeservices.bing.com. 300 IN CNAME nochatstrict.bing.com.
 duckduckgo.com. 300 IN CNAME safe.duckduckgo.com.
 www.youtube-nocookie.com. 3600 IN CNAME restrictmoderate.youtube.com.
-
-; Anycast Google
-www.google.com. 300 IN AAAA 2001:4860:4826:7700::
-www.google.com. 300 IN AAAA 2001:4860:4827:7700::
-www.google.com. 300 IN AAAA 2001:4860:4828:7700::
-www.google.com. 300 IN AAAA 2001:4860:4829:7700::
-www.google.com. 300 IN AAAA 2001:4860:482a:7700::
-www.google.com. 300 IN AAAA 2001:4860:482b:7700::
-www.google.com. 300 IN AAAA 2001:4860:482c:7700::
-www.google.com. 300 IN AAAA 2001:4860:482d:7700::
