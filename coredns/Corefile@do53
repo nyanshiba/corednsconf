@@ -1,0 +1,267 @@
+(bind_dns64) {
+    multisocket 4
+    rewrite ttl suffix . 30-
+}
+(bind_dns64p) {
+    multisocket 4
+    rewrite ttl suffix . 30-
+}
+(bind_ipv6) {
+    multisocket 4
+    rewrite ttl suffix . 30-
+}
+(bind_ipv4) {
+    bind 10.0.8.53
+    multisocket 4
+    rewrite ttl suffix . 30-
+    view sinkhole {
+        expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
+    }
+}
+(bind_private) {
+    bind eth0
+    multisocket 4
+    rewrite ttl suffix . 30-
+    view sinkhole {
+        expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
+    }
+}
+(nodata_a) {
+    template IN A {
+        authority "{{ .Name }} 33 IN SOA draft-hazeyama-sunset4-dns-a-filter-00.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+}
+pool.ntp.org.:53 {
+    import bind_private
+    template ANY ANY {
+      answer  "{{ .Name }} 123 IN CNAME ntp.home.arpa."
+        authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+    forward . 127.0.6.1:1053
+}
+html-load.com.:53 {
+    import bind_dns64
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/html-load.com html-load.com. {
+        fallthrough
+    }
+    forward . 127.0.255.0:1153 {
+        except fb.html-load.com.
+    }
+    forward . 127.0.6.1:1053
+}
+html-load.com.:53 {
+    import bind_ipv4
+    forward . 127.0.255.0:1153 {
+        except fb.html-load.com.
+    }
+    forward . 127.0.6.1:1053
+}
+
+# global local-zone
+5ch.net.:53 2ch.net.:53 {
+    import bind_private
+    template IN HTTPS {
+      match "(\w+)\.[25]ch\.net\.$"  
+      answer  "{{ index .Match 1 }}.{{ .Zone }} 900 IN HTTPS 0 {{ index .Match 1 }}.5ch.io."
+        authority "{{ .Name }} 900 IN SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+    template ANY ANY {
+        authority "{{ .Name }} 900 {{ .Class }} SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+}
+com.:53 {
+    import bind_ipv6
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/twimg.com twimg.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/nyanshiba.com nyanshiba.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+
+# DNS64
+# native: requires "Local Network" permission on Apple iOS
+# system, web: anyone can use nyanshiba/nat64-on-link
+
+# MAP-E/PPPoE LB
+## web
+syosetu.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.64.0:6453 127.0.64.1:6453
+}
+
+# tayga@pp01
+## system
+sequoia.apple.com.:53 guzzoni.apple.com.:53 {
+    import bind_dns64
+    forward . 127.0.64.1:6453
+}
+
+
+## web
+ipinfo.io.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:1::/96
+    forward . 127.0.6.1:1053
+}
+wifimireru.inonius.net.:53 {
+    import bind_dns64
+    dns64 {
+        prefix 64:ff9b:1:1::/96
+        translate_all
+    }
+    forward . 127.0.6.1:1053
+}
+assets.msn.com.:53 {
+    import bind_dns64
+    import nodata_a
+    forward . 127.0.64.1:6453 # To apply the settings, run `gps widgets | kill`
+    #forward . 127.0.64.3:6453 # ninnescah, kansas
+    #forward . 127.0.64.4:6453 # Change IP geolocation of the Windows 11 weather widget to...
+    #forward . 127.0.64.10:6453 # niigata
+    #forward . 127.0.64.20:6453 # iruma
+    #forward . 127.0.64.35:6453 # nirasaki
+}
+
+## native
+
+
+# tayga@tu10
+## system
+
+
+# tayga@tu20
+## web
+aftrmgmt.s.sdconw.com.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:20::/96
+    forward . 127.0.6.1:1053
+}
+
+
+# tayga@warp
+## system
+sessionserver.mojang.com.:53 mc.hypixel.net.:53 {
+    import bind_dns64
+    dns64 {
+        prefix 64:ff9b:1:35::/96
+        translate_all
+    }
+    forward . 127.0.6.1:1053
+}
+cloudflare.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.64.35:6453 {
+        except apple-relay.cloudflare.com.
+        #except challenges.cloudflare.com.
+        except crypto.cloudflare.com.
+        except radar.cloudflare.com.
+        except speed.cloudflare.com.
+    }
+    forward . 127.0.6.1:1053
+}
+
+## native
+twitter.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    forward . 127.0.64.35:6453
+}
+x.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    forward . 127.0.64.35:6453 # force IPv6 to disable ads
+}
+twimg.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    loadbalance round_robin
+    file /usr/local/etc/coredns/zone/twimg.com twimg.com. { # use Fastly
+        fallthrough
+    }
+    forward . 127.0.6.1:1053 {
+        except abs.twimg.com.
+        except abs-0.twimg.com.
+        except abs-zero.twimg.com.
+    }
+    forward . 127.0.64.35:6453 # force warp
+}
+t.co.:53 discord.com.:53 discordapp.com.:53 discord.gg.:53 discordapp.net.:53 chatgpt.com.:53 {
+    import bind_dns64p
+    import nodata_a
+    forward . 127.0.64.35:6453
+}
+
+## web
+cdn.cloudflare.net.:53 pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 elsevier.com.:53 elsevierhealth.com.:53 cell.com.:53 sciencedirectassets.com.:53 sagepub.com.:53 stackoverflow.com.:53 sstatic.net.:53 feedly.com.:53 quora.com.:53 tsmc.com.:53 {
+    import bind_dns64
+    dns64 64:ff9b:1:35::/96 # merge DNS64 and IPv6
+    forward . 127.0.6.1:1053
+}
+copilot.microsoft.com.:53 rfc-editor.org.:53 archive.org.:53 acm.org.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 dropboxstatic.com.:53 {
+    import bind_dns64
+    import nodata_a
+    forward . 127.0.64.35:6453 # force DNS64
+}
+radiko.jp.:53 {
+    import bind_dns64
+    forward . 127.0.6.1:1053 {
+        except api.radiko.jp.
+        except cf.radiko.jp.
+    }
+    forward . 127.0.64.35:6453
+}
+
+# other
+.:53 {
+    import bind_private
+    # internals
+    file /usr/local/etc/coredns/zone/home.arpa home.arpa.
+    file /usr/local/etc/coredns/zone/internal internal.
+    file /usr/local/etc/coredns/zone/flets flets.
+    file /usr/local/etc/coredns/zone/ocn ocn.
+    file /usr/local/etc/coredns/zone/net net. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/jp jp. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/tv tv. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+.:53 {
+    bind eth0
+    multisocket 4
+    cache {
+        serve_stale 24h immediate
+    }
+    forward . 2404:1a8:7f01:b::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+    }
+}
