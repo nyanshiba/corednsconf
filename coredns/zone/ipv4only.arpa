@@ -1,0 +1,17 @@
+$ORIGIN ipv4only.arpa.
+$TTL 10800
+
+@   IN  SOA dns.internal. admin.internal. (
+        2026033101 ; Serial (YYYYMMDDnn)
+        3600       ; Refresh (1 hour)
+        900        ; Retry   (15 minutes)
+        1209600    ; Expire  (14 days)
+        300        ; Minimum (5 minutes)
+)
+
+@                       10800  IN  NS    dns.internal.
+
+ipv4only.arpa.          10800  IN  A     192.0.0.170
+ipv4only.arpa.          10800  IN  A     192.0.0.171
+ipv4only.arpa.          10800  IN  AAAA  64:ff9b:1:4::c000:00aa
+ipv4only.arpa.          10800  IN  AAAA  64:ff9b:1:4::c000:00ab

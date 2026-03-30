@@ -238,6 +238,7 @@ radiko.jp.:53 {
 .:53 {
     import bind_private
     # internals
+    file /usr/local/etc/coredns/zone/ipv4only.arpa ipv4only.arpa.
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     file /usr/local/etc/coredns/zone/internal internal.
     file /usr/local/etc/coredns/zone/flets flets.
