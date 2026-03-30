@@ -2,7 +2,7 @@ $ORIGIN com.
 $TTL 10800
 
 @   IN  SOA dns.internal. admin.internal. (
-        2026032502 ; Serial (YYYYMMDDnn)
+        2026033101 ; Serial (YYYYMMDDnn)
         3600       ; Refresh (1 hour)
         900        ; Retry   (15 minutes)
         1209600    ; Expire  (14 days)
@@ -299,6 +299,26 @@ www.palantir.com. 1800 IN AAAA 2a04:4e42:600::426
 50-courier.push.apple.com. 300 IN AAAA 2403:300:a42:900::5
 50-courier.push.apple.com. 300 IN AAAA 2403:300:a42:900::6
 50-courier.push.apple.com. 300 IN AAAA 2403:300:a42:900::a
+
+; Uses the Apple Edge cache provided by AS4685, a private peering partner of AS4713.
+appldnld.apple.com. 300 IN AAAA 2001:c28:4:880::1 ; TYO
+;appldnld.apple.com. 300 IN AAAA 2001:c28:5:880::2 ; OSA
+audiocontentdownload.apple.com. 300 IN AAAA 2001:c28:4:880::1
+cds.apple.com. 300 IN AAAA 2001:c28:4:880::1
+cl2.apple.com. 300 IN AAAA 2001:c28:4:880::1
+ipcdn.apple.com. 300 IN AAAA 2001:c28:4:880::1
+iosapps.itunes.apple.com. 300 IN AAAA 2001:c28:4:880::1
+gspe21-ssl.ls.apple.com. 300 IN AAAA 2001:c28:4:880::1
+mesu.apple.com. 300 IN AAAA 2001:c28:4:880::1
+cdn2.smoot.apple.com. 300 IN AAAA 2001:c28:4:880::1
+smp-device-content.apple.com. 300 IN AAAA 2001:c28:4:880::1
+swcdn.apple.com. 300 IN AAAA 2001:c28:4:880::1
+sylvan.apple.com. 300 IN AAAA 2001:c28:4:880::1
+valid.apple.com. 300 IN AAAA 2001:c28:4:880::1
+app-site-association.cdn-apple.com. 300 IN AAAA 2001:c28:4:880::1
+cstat.cdn-apple.com. 300 IN AAAA 2001:c28:4:880::1
+ml.cdn-apple.com. 300 IN AAAA 2001:c28:4:880::1
+updates.cdn-apple.com. 300 IN AAAA 2001:c28:4:880::1
 
 ; Opt-outs
 www.bing.com. 300 IN CNAME nochatstrict.bing.com.
