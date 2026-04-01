@@ -325,3 +325,6 @@ www.bing.com. 300 IN CNAME nochatstrict.bing.com.
 edgeservices.bing.com. 300 IN CNAME nochatstrict.bing.com.
 duckduckgo.com. 300 IN CNAME safe.duckduckgo.com.
 www.youtube-nocookie.com. 3600 IN CNAME restrictmoderate.youtube.com.
+
+; An alternative to https://detect.ffc.adobeoobe.com:15292 (Adobe CC telemetry) in Chromium protected by LNA.
+detect-ccd.creativecloud.adobe.com. 120 IN CNAME a2b59aaaf70266dcf.awsglobalaccelerator.com.
