@@ -6,23 +6,51 @@
     multisocket 4
     rewrite ttl suffix . 30-
 }
-(bind_ipv6) {
-    multisocket 4
-    rewrite ttl suffix . 30-
+(bind_ipv6ss) {
 }
 (bind_ipv4) {
     bind 10.0.8.53
     multisocket 4
     rewrite ttl suffix . 30-
-    view sinkhole {
-        expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
-    }
 }
 (bind_private) {
-    bind eth0
+    bind 10.0.8.53
+    bind 1.0.0.1
+    bind 1.1.1.1
+    bind 8.8.4.4
+    bind 8.8.8.8
+    bind 146.112.41.2
+    bind 146.112.41.3
+    bind 146.112.41.4
+    bind 146.112.41.5
+    bind 162.159.36.2
+    bind 208.67.220.2
+    bind 208.67.220.123
+    bind 208.67.220.220
+    bind 208.67.220.222
+    bind 208.67.222.2
+    bind 208.67.222.123
+    bind 208.67.222.220
+    bind 208.67.222.222
+    bind 223.5.5.5
+    bind 223.6.6.6
     multisocket 4
     rewrite ttl suffix . 30-
-    view sinkhole {
+}
+(acl_refused_server) {
+    acl {
+        allow type A net 10.0.0.12/32 # vpn
+        block type A net 10.0.0.0/24
+        allow type A net 10.0.2.12/32 # vpn
+        allow type A net 10.0.2.35/32 # Intel Dual Band Wirelless-AC 7265 rev. D does not support IPv6 DNS
+        block type A net 10.0.2.0/24
+        block type A net 10.0.5.0/24
+        block type A net 10.0.6.0/23
+        block type A net 10.0.8.0/21
+    }
+}
+(view_exclude_probe) {
+    view exclude_probe {
         expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
     }
 }
@@ -33,8 +61,17 @@
 }
 pool.ntp.org.:53 {
     import bind_private
+    import view_exclude_probe
     template ANY ANY {
       answer  "{{ .Name }} 123 IN CNAME ntp.home.arpa."
+        authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
+    }
+    forward . 127.0.6.1:1053
+}
+pool.ntp.org.:53 {
+    import bind_ipv6ss
+    template ANY ANY {
+      answer  "{{ .Name }} 123 IN CNAME ntp.internal."
         authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
     }
     forward . 127.0.6.1:1053
@@ -52,6 +89,7 @@ html-load.com.:53 {
 }
 html-load.com.:53 {
     import bind_ipv4
+    import view_exclude_probe
     forward . 127.0.255.0:1153 {
         except fb.html-load.com.
     }
@@ -61,6 +99,7 @@ html-load.com.:53 {
 # global local-zone
 5ch.net.:53 2ch.net.:53 {
     import bind_private
+    import view_exclude_probe
     template IN HTTPS {
       match "(\w+)\.[25]ch\.net\.$"  
       answer  "{{ index .Match 1 }}.{{ .Zone }} 900 IN HTTPS 0 {{ index .Match 1 }}.5ch.io."
@@ -69,26 +108,6 @@ html-load.com.:53 {
     template ANY ANY {
         authority "{{ .Name }} 900 {{ .Class }} SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
     }
-}
-com.:53 {
-    import bind_ipv6
-    loadbalance round_robin
-    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/x.com x.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/twimg.com twimg.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/nyanshiba.com nyanshiba.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/com com. {
-        fallthrough
-    }
-    forward . 127.0.6.1:1053
 }
 
 # DNS64
@@ -246,12 +265,29 @@ radiko.jp.:53 {
 # other
 .:53 {
     import bind_private
+    import view_exclude_probe
+    import acl_refused_server
     # internals
     file /usr/local/etc/coredns/zone/ipv4only.arpa ipv4only.arpa.
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     file /usr/local/etc/coredns/zone/internal internal.
     file /usr/local/etc/coredns/zone/flets flets.
     file /usr/local/etc/coredns/zone/ocn ocn.
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/twimg.com twimg.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/nyanshiba.com nyanshiba.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
     file /usr/local/etc/coredns/zone/net net. {
         fallthrough
     }
@@ -264,8 +300,7 @@ radiko.jp.:53 {
     forward . 127.0.6.1:1053
 }
 .:53 {
-    bind eth0
-    multisocket 4
+    import bind_private
     cache {
         serve_stale 24h immediate
     }
@@ -274,4 +309,29 @@ radiko.jp.:53 {
         max_fails 0
         failover SERVFAIL
     }
+}
+.:53 {
+    import bind_ipv6ss
+    view qtypefilter {
+        expr type() == 'AAAA'
+    }
+    multisocket 4
+    rewrite ttl suffix . 30-
+    file /usr/local/etc/coredns/zone/internal ntp.internal.
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
+    forward . 127.0.6.1:1053
+}
+.:53 {
+    import bind_ipv6ss
+    multisocket 4
+    file /usr/local/etc/coredns/zone/home.arpa home.arpa.
+    forward . 127.0.255.0:1153 {
+        except github.com.
+        except api.minecraftservices.com.
+        except sessionserver.mojang.com.
+        except ftp.riken.jp.
+    }
+    forward . 127.0.6.1:1053
 }
