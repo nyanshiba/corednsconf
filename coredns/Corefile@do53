@@ -1,16 +1,16 @@
 (bind_dns64) {
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
 }
 (bind_dns64p) {
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
 }
 (bind_ipv6ss) {
 }
 (bind_ipv4) {
     bind 10.0.8.53
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
 }
 (bind_private) {
@@ -34,7 +34,7 @@
     bind 208.67.222.222
     bind 223.5.5.5
     bind 223.6.6.6
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
 }
 (acl_refused_server) {
@@ -315,7 +315,7 @@ radiko.jp.:53 {
     view qtypefilter {
         expr type() == 'AAAA'
     }
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
     file /usr/local/etc/coredns/zone/internal ntp.internal.
     file /usr/local/etc/coredns/zone/com com. {
@@ -325,7 +325,7 @@ radiko.jp.:53 {
 }
 .:53 {
     import bind_ipv6ss
-    multisocket 4
+    multisocket 1
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     forward . 127.0.255.0:1153 {
         except github.com.

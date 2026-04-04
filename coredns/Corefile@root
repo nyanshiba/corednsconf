@@ -1,6 +1,6 @@
 (bind_upstream) {
     bind 127.0.6.1
-    multisocket 4
+    multisocket 1
     cache {
         serve_stale 24h immediate
     }
@@ -65,7 +65,7 @@ google.com.:1053 googleapis.com.:1053 googleusercontent.com.:1053 ggpht.com.:105
 # always_nodata with SOA
 .:1153 {
     bind 127.0.255.0
-    multisocket 4
+    multisocket 1
     template ANY ANY {
         authority "{{ .Name }} 5782 IN SOA ns1.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
     }

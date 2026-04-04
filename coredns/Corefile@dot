@@ -1,5 +1,5 @@
 (bind_dot) {
-    multisocket 4
+    multisocket 1
     rewrite ttl suffix . 30-
     tls /etc/coredns/tls/fullchain.pem /etc/coredns/tls/privkey.pem
     loadbalance round_robin
