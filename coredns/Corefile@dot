@@ -1,6 +1,6 @@
 (bind_dot) {
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite ttl suffix . 120-
     tls /etc/coredns/tls/fullchain.pem /etc/coredns/tls/privkey.pem
     loadbalance round_robin
 }
@@ -13,11 +13,9 @@ tls://html-load.com.:853 {
     }
     forward . 127.0.6.1:1053
 }
-tls://connectivitycheck.gstatic.com.:853 tls://clients3.google.com.:853 {
-    import bind_dot
-    forward . 127.0.6.1:1053
-}
-tls://com.:853 {
+
+# other
+tls://.:853 {
     import bind_dot
     file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
         fallthrough
@@ -27,24 +25,6 @@ tls://com.:853 {
     }
     file /usr/local/etc/coredns/zone/twimg.com twimg.com. {
         fallthrough
-    }
-    file /usr/local/etc/coredns/zone/nyanshiba.com nyanshiba.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/com com. {
-        fallthrough
-    }
-    forward . 127.0.6.1:1053 {
-        except googlevideo.com.
-        except video.twimg.com.
-    }
-    forward . 127.0.255.0:1153
-}
-
-tls://.:853 {
-    import bind_dot
-    view qtypefilter {
-        expr type() in ['A', 'AAAA']
     }
     file /usr/local/etc/coredns/zone/net net. {
         fallthrough
@@ -56,11 +36,9 @@ tls://.:853 {
         fallthrough
     }
     forward . 127.0.6.1:1053 {
+        except googlevideo.com. # reduce giga ga tarinai
+        except video.twimg.com.
         except app.jrepoint.jp. # offline mode
     }
-    forward . 127.0.255.0:1153
-}
-tls://.:853 {
-    import bind_dot
     forward . 127.0.255.0:1153
 }

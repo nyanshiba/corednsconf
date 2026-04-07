@@ -1,0 +1,23 @@
+$ORIGIN push-apple.com.akadns.net.
+$TTL 10800
+
+@   IN  SOA dns.internal. admin.internal. (
+        2026040701 ; Serial (YYYYMMDDnn)
+        3600       ; Refresh (1 hour)
+        900        ; Retry   (15 minutes)
+        1209600    ; Expire  (14 days)
+        300        ; Minimum (5 minutes)
+)
+
+@                       10800  IN  NS    dns.internal.
+
+; 0-courier2.push.apple.com TYO
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN A 17.57.145.148
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN A 17.57.145.149
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN A 17.57.145.150
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN A 17.57.145.153
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN A 17.57.145.154
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN AAAA 2403:300:a42:900::4
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN AAAA 2403:300:a42:900::5
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN AAAA 2403:300:a42:900::6
+apac-asia-courier-vs.push-apple.com.akadns.net. 300 IN AAAA 2403:300:a42:900::a
