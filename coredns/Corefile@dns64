@@ -1,12 +1,6 @@
-(qtype_a_aaaa) {
-    multisocket 1
-    view qtypefilter {
-        expr type() in ['A', 'AAAA']
-    }
-}
 .:6453 {
     bind 127.0.64.1
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:1::/96
         translate_all
@@ -16,7 +10,7 @@
 }
 .:6453 {
     bind 127.0.64.3
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:3::/96
         translate_all
@@ -26,7 +20,7 @@
 }
 .:6453 {
     bind 127.0.64.4
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:4::/96
         translate_all
@@ -36,7 +30,7 @@
 }
 .:6453 {
     bind 127.0.64.10
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:10::/96
         translate_all
@@ -46,7 +40,7 @@
 }
 .:6453 {
     bind 127.0.64.20
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:20::/96
         translate_all
@@ -56,21 +50,11 @@
 }
 .:6453 {
     bind 127.0.64.35
-    import qtype_a_aaaa
+    multisocket 1
     dns64 {
         prefix 64:ff9b:1:35::/96
         translate_all
         allow_ipv4
     }
     forward . 127.0.6.1:1053
-}
-.:6453 {
-    bind 127.0.64.1
-    bind 127.0.64.3
-    bind 127.0.64.4
-    bind 127.0.64.10
-    bind 127.0.64.20
-    bind 127.0.64.35
-    multisocket 1
-    forward . 127.0.255.0:1153
 }
