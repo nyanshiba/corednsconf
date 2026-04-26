@@ -122,6 +122,14 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 {
     }
 }
 
+# tayga@mitm
+mitm.it.:53 {
+    import bind_dns64p
+    import nodata_https
+    import nodata_a
+    forward . 127.0.64.80:6453
+}
+
 # tayga@pp01
 ## system
 sequoia.apple.com.:53 guzzoni.apple.com.:53 {
