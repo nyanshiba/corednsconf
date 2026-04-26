@@ -176,48 +176,26 @@ aftrmgmt.s.sdconw.com.:53 {
 
 # tayga@warp
 ## system
-sessionserver.mojang.com.:53 mc.hypixel.net.:53 {
+challenges.cloudflare.com.:53 {
     import bind_dns64
     import nodata_https
-    dns64 {
-        prefix 64:ff9b:1:35::/96
-        translate_all
-    }
-    forward . 127.0.6.1:1053
-}
-cloudflare.com.:53 {
-    import bind_dns64p
     import nodata_a
-    forward . 127.0.64.35:6453 {
-        except apple-relay.cloudflare.com.
-        #except challenges.cloudflare.com.
-        except crypto.cloudflare.com.
-        except radar.cloudflare.com.
-        except speed.cloudflare.com.
-    }
-    forward . 127.0.6.1:1053
+    forward . 127.0.64.35:6453
 }
-
 ## native
-twitter.com.:53 {
+twitter.com.:53 x.com.:53 t.co.:53 proxsee-cf.pscp.tv.:53 cdn.cloudflare.net.:53 {
     import bind_dns64p
     import nodata_https
-    import nodata_a
+    import nodata_a # force IPv6 to reduce ads
     loadbalance round_robin
     file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
         fallthrough
     }
-    forward . 127.0.64.35:6453
-}
-x.com.:53 {
-    import bind_dns64p
-    import nodata_a
-    loadbalance round_robin
     file /usr/local/etc/coredns/zone/x.com x.com. {
         fallthrough
     }
-    forward . 127.0.64.35:6453 # force IPv6 to disable ads
-    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net. # DNS64 synthesis is performed in cdn.cloudflare.net.:53, not here.
+    forward . 127.0.64.35:6453
+    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net. # DNS64 synthesis is performed in cdn.cloudflare.net.:53, not x.com.:53.
 }
 twimg.com.:53 {
     import bind_dns64p
@@ -234,31 +212,18 @@ twimg.com.:53 {
     }
     forward . 127.0.64.35:6453 # force warp
 }
-t.co.:53 discord.com.:53 discordapp.com.:53 discord.gg.:53 discordapp.net.:53 chatgpt.com.:53 {
-    import bind_dns64p
-    import nodata_a
-    forward . 127.0.64.35:6453
-}
 
 ## web
-cdn.cloudflare.net.:53 pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 elsevier.com.:53 elsevierhealth.com.:53 cell.com.:53 sciencedirectassets.com.:53 sagepub.com.:53 stackoverflow.com.:53 sstatic.net.:53 feedly.com.:53 quora.com.:53 tsmc.com.:53 {
+pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 archive.org.:53 sciencedirectassets.com.:53 stackoverflow.com.:53 sstatic.net.:53 { # rewrite cname, BYOIP, AS209242, Dedicated Egress IP
     import bind_dns64
     dns64 64:ff9b:1:35::/96 # merge DNS64 and IPv6
     forward . 127.0.6.1:1053
 }
-copilot.microsoft.com.:53 rfc-editor.org.:53 archive.org.:53 acm.org.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 dropboxstatic.com.:53 {
+copilot.microsoft.com.:53 rfc-editor.org.:53 apnic.net.:53 acm.org.:53 hcaptcha.com.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 dropboxstatic.com.:53 { # Privacy, broken IPv6, Latency
     import bind_dns64
     import nodata_https
     import nodata_a
     forward . 127.0.64.35:6453 # force DNS64
-}
-radiko.jp.:53 {
-    import bind_dns64
-    forward . 127.0.6.1:1053 {
-        except api.radiko.jp.
-        except cf.radiko.jp.
-    }
-    forward . 127.0.64.35:6453
 }
 
 # other
