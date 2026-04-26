@@ -1,17 +1,17 @@
 (bind_dns64) {
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite continue ttl suffix . 30-
 }
 (bind_dns64p) {
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite continue ttl suffix . 30-
 }
 (bind_ipv6ss) {
 }
 (bind_ipv4) {
     bind 10.0.8.53
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite continue ttl suffix . 30-
 }
 (bind_private) {
     bind 10.0.8.53
@@ -35,7 +35,7 @@
     bind 223.5.5.5
     bind 223.6.6.6
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite continue ttl suffix . 30-
 }
 (acl_refused_server) {
     acl {
@@ -218,6 +218,7 @@ x.com.:53 {
         fallthrough
     }
     forward . 127.0.64.35:6453 # force IPv6 to disable ads
+    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net. # DNS64 synthesis is performed in cdn.cloudflare.net.:53, not here.
 }
 twimg.com.:53 {
     import bind_dns64p
@@ -306,7 +307,7 @@ radiko.jp.:53 {
         expr type() == 'AAAA'
     }
     multisocket 1
-    rewrite ttl suffix . 30-
+    rewrite continue ttl suffix . 30-
     file /usr/local/etc/coredns/zone/internal ntp.internal.
     file /usr/local/etc/coredns/zone/com com. {
         fallthrough
