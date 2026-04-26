@@ -80,10 +80,7 @@ html-load.com.:53 {
     import bind_dns64
     loadbalance round_robin
     file /usr/local/etc/coredns/zone/html-load.com html-load.com. {
-        fallthrough
-    }
-    forward . 127.0.255.0:1153 {
-        except fb.html-load.com.
+        fallthrough fb.html-load.com.
     }
     forward . 127.0.6.1:1053
 }
