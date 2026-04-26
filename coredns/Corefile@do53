@@ -328,9 +328,12 @@ radiko.jp.:53 {
     multisocket 1
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     forward . 127.0.255.0:1153 {
+        # whitelisted IPv4 single-stack services
         except github.com.
         except api.minecraftservices.com.
         except sessionserver.mojang.com.
+        except speedtest.net.
+        except ghcr.io.
         except ftp.riken.jp.
     }
     forward . 127.0.6.1:1053
