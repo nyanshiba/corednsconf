@@ -534,7 +534,37 @@ v4flets-east.jp.:1053 {
         except css-load.com.
         except html-load.cc.
         except img-load.com.
-        
+
+        # whats-my-ip
+        # https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/GoogleCloudPlatformDNS/Analytic%20Rules/GCPDNSIpCheck.yaml
+        except ip.me.
+        except whatismyip.akamai.com.
+        except whatismyipaddress.com.
+        except ip2location.com.
+        except ipaddress.my.
+        except whatismyip.com.
+        except ipinfo.info.
+        except checkmyip.com.
+        except myip.com.
+        except checkmyip.org.
+        except canireachthe.net.
+        except icanhazip.com.
+        except anysrc.net.
+        except ip-api.com.
+        except wtfismyip.com.
+        except checkip.dyndns.org.
+        except 2ip.ua.
+        except icanhazip.com.
+        except ipify.org.
+        except ip-api.com.
+        except checkip.amazonaws.com.
+        except ipecho.net.
+        #except ipinfo.io.
+        except whatismyipaddress.com.
+        except freegeoip.app.
+        except checkip.azurewebsites.net.
+        # https://github.com/MISP/misp-warninglists/blob/main/lists/whats-my-ip/list.json
+
     	# old gTLD
         except adservice.google.com.
         except affiliate.googleusercontent.com.
