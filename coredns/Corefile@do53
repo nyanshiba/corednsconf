@@ -55,26 +55,15 @@
     }
 }
 (nodata_a) {
-    template IN A {
-        authority "{{ .Name }} 33 IN SOA draft-hazeyama-sunset4-dns-a-filter-00.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
-    }
-}
-pool.ntp.org.:53 {
-    import bind_private
-    import view_exclude_probe
-    template ANY ANY {
-      answer  "{{ .Name }} 123 IN CNAME ntp.home.arpa."
-        authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
-    }
-    forward . 127.0.6.1:1053
+    # this disables IPv4 fallback as defined in RFC 8305.
+    rewrite continue type A SOA
 }
 pool.ntp.org.:53 {
     import bind_ipv6ss
-    template ANY ANY {
-      answer  "{{ .Name }} 123 IN CNAME ntp.internal."
-        authority "{{ .Name }} 123 IN SOA rfc8633.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
-    }
-    forward . 127.0.6.1:1053
+    import bind_private
+    import view_exclude_probe
+    forward . 127.0.0.1:53
+    rewrite stop name regex .* ntp.internal. answer auto
 }
 html-load.com.:53 {
     import bind_dns64
@@ -87,7 +76,7 @@ html-load.com.:53 {
 html-load.com.:53 {
     import bind_ipv4
     import view_exclude_probe
-    forward . 127.0.255.0:1153 {
+    forward . 127.0.255.1:1153 {
         except fb.html-load.com.
     }
     forward . 127.0.6.1:1053

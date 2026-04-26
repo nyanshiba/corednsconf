@@ -67,10 +67,37 @@ google.com.:1053 googleapis.com.:1053 googleusercontent.com.:1053 ggpht.com.:105
     bind 127.0.255.0
     multisocket 1
     template ANY ANY {
-        authority "{{ .Name }} 5782 IN SOA ns1.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
+        authority "{{ .Name }} 60 IN SOA ns1.{{ .Name }} hostmaster.{{ .Name }} 1 60 1200 604800 60"
     }
 }
+# NODATA with real Additional
+.:1153 {
+    bind 127.0.255.1
+    multisocket 1
+    cache {
+        serve_stale 24h immediate
+    }
+    rewrite continue type A SOA
+    rewrite continue type AAAA SOA
+    rewrite continue type HTTPS SOA
+    rewrite stop name regex (.*?)\.(.*)\. {2}.
+    forward . 2404:1a8:7f01:a::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
+        prefer_udp
+        max_fails 0
+        #expire 1s
+        #failover SERVFAIL
+        next SERVFAIL
+    }
+    forward . 127.0.255.0:1153
+}
 # resolver
+.:1053 {
+    import bind_upstream
+    view qtypefilter {
+        expr type() == 'SOA'
+    }
+    forward . 127.0.255.1:1153
+}
 .:1053 {
     import bind_upstream
     view qtypefilter {

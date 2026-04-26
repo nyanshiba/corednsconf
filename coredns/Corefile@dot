@@ -8,7 +8,7 @@
 # global local-zone
 tls://html-load.com.:853 {
     import bind_dot
-    forward . 127.0.255.0:1153 {
+    forward . 127.0.255.1:1153 {
         except fb.html-load.com.
     }
     forward . 127.0.6.1:1053
