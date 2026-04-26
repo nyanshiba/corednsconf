@@ -301,14 +301,7 @@ radiko.jp.:53 {
 }
 .:53 {
     import bind_private
-    cache {
-        serve_stale 24h immediate
-    }
-    forward . 2404:1a8:7f01:b::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
-        prefer_udp
-        max_fails 0
-        failover SERVFAIL
-    }
+    forward . 127.0.6.2:1053
 }
 .:53 {
     import bind_ipv6ss

@@ -591,3 +591,16 @@ google.com.:1053 googleapis.com.:1053 googleusercontent.com.:1053 ggpht.com.:105
         #failover SERVFAIL
     }
 }
+.:1053 {
+    bind 127.0.6.2
+    multisocket 1
+    cache {
+        serve_stale 24h immediate
+    }
+    loadbalance round_robin
+    forward . 2404:1a8:7f01:a::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
+        prefer_udp
+        max_fails 0
+        failover SERVFAIL
+    }
+}
