@@ -14,6 +14,8 @@
     rewrite continue ttl suffix . 30-
 }
 (bind_private) {
+    bind ::1
+    bind 127.0.0.1
     bind 10.0.8.53
     bind 1.0.0.1
     bind 1.1.1.1
