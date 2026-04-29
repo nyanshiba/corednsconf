@@ -42,9 +42,9 @@ v4flets-east.jp.:1053 {
     cache {
         serve_stale 24h immediate
     }
-    rewrite continue type A SOA
-    rewrite continue type AAAA SOA
-    rewrite continue type HTTPS SOA
+    rewrite continue type A NULL
+    rewrite continue type AAAA NULL
+    rewrite continue type HTTPS NULL
     rewrite stop name regex (.*?)\.(.*)\. {2}.
     forward . 2404:1a8:7f01:a::3 2001:380:0:4::1 2001:380:0:4::2 2001:380:0:4::3 2001:380:0:4::4 2001:380:0:4::5 2001:380:0:4::6 2001:380:0:4::7 2001:380:0:4::9 {
         prefer_udp
@@ -59,7 +59,7 @@ v4flets-east.jp.:1053 {
 .:1053 {
     import bind_upstream
     view qtypefilter {
-        expr type() == 'SOA'
+        expr type() == 'NULL'
     }
     forward . 127.0.255.1:1153
 }

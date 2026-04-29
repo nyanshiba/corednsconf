@@ -56,11 +56,11 @@
 }
 (nodata_a) {
     # this disables IPv4 fallback as defined in RFC 8305.
-    rewrite continue type A SOA
+    rewrite continue type A NULL
 }
 (nodata_https) {
     # disabling RFC 9460 Sec.7.3 and 4.2 to enforce DNS64.
-    rewrite continue type HTTPS SOA
+    rewrite continue type HTTPS NULL
 }
 pool.ntp.org.:53 {
     import bind_ipv6ss
