@@ -69,7 +69,8 @@ pool.ntp.org.:53 {
     import bind_private
     import view_exclude_probe
     forward . 127.0.0.1:53
-    rewrite stop name regex .* ntp.internal. answer auto
+    rewrite stop name regex .*.datadog.pool.ntp.org. ntp.flets. answer auto # off-link
+    rewrite stop name regex .* ntp.internal. answer auto # on-link
 }
 html-load.com.:53 {
     import bind_dns64

@@ -1,15 +1,10 @@
 $ORIGIN flets.
-$TTL 10800
+$TTL 86400
 
-@   IN  SOA dns.flets. admin.flets. (
-        2026031201 ; Serial (YYYYMMDDnn)
-        3600       ; Refresh (1 hour)
-        900        ; Retry   (15 minutes)
-        1209600    ; Expire  (14 days)
-        300        ; Minimum (5 minutes)
-)
+@               IN   SOA  ns0a.flets. dnsmaster.flets. 2835296256 86400 43200 2419200 900
 
-@                       10800  IN  NS    dns.flets.
-
-dns                     10800  IN  AAAA  2404:1a8:7f01:a::3
-dns                     10800  IN  AAAA  2404:1a8:7f01:b::3
+dns      86400  IN  AAAA  2404:1a8:7f01:a::3
+dns      86400  IN  AAAA  2404:1a8:7f01:b::3
+ntp      86400  IN  AAAA  2404:1a8:1102::a
+ntp      86400  IN  AAAA  2404:1a8:1102::b
+ntp      86400  IN  AAAA  2404:1a8:1102::c
