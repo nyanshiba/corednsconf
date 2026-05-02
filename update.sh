@@ -2,7 +2,7 @@
 
 server=coredns.igo
 if [ "$1" == "" ]; then
-  daemons="coredns@do53 coredns@root coredns@dns64 coredns@dot frr"
+  daemons="coredns@do53 coredns@root coredns@dns64 coredns@dot coredns@doh frr"
 else
   daemons=$@
 fi
