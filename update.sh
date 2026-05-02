@@ -1,15 +1,17 @@
 #!/bin/bash
 
-server=coredns.fro
+server=coredns.igo
 if [ "$1" == "" ]; then
-  daemons="coredns@root coredns@dot coredns@dns64"
+  daemons="coredns@do53 coredns@root coredns@dns64 coredns@dot frr"
 else
   daemons=$@
 fi
 
 rsync -rtv \
   --exclude='.git/' \
+  --exclude='resperf/' \
   --include='*/' \
+  --include='frr/***' \
   --include='sysctl.d/***' \
   --include='systemd/network/***' \
   --include='systemd/system/coredns@.service' \
