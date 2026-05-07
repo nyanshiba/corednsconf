@@ -29,6 +29,9 @@ tls://.:853 {
     file /usr/local/etc/coredns/zone/net net. {
         fallthrough
     }
+    file /usr/local/etc/coredns/zone/io io. {
+        fallthrough
+    }
     file /usr/local/etc/coredns/zone/jp jp. {
         fallthrough
     }

@@ -152,6 +152,9 @@ ipinfo.io.:53 {
     import bind_dns64
     import nodata_https
     import nodata_a
+    file /usr/local/etc/coredns/zone/io io. {
+        fallthrough
+    }
     #forward . 127.0.64.1:6453
     forward . 127.0.64.35:6453 # threat actor would be scared
 }
@@ -269,6 +272,9 @@ copilot.microsoft.com.:53 rfc-editor.org.:53 apnic.net.:53 acm.org.:53 hcaptcha.
         fallthrough
     }
     file /usr/local/etc/coredns/zone/net net. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/io io. {
         fallthrough
     }
     file /usr/local/etc/coredns/zone/jp jp. {

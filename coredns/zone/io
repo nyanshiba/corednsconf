@@ -1,0 +1,7 @@
+$ORIGIN io.
+$TTL 3600
+
+@	IN	SOA	a0.nic.io. hostmaster.donuts.email. 1778166584 7200 900 1209600 3600
+
+; disable IPv6 detection
+v6.ipinfo.io. 60 IN CNAME ipinfo.io.
