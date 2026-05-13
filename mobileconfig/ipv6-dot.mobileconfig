@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>DNSSettings</key>
+            <dict>
+                <!-- MUST prefs:root=General&path=ManagedConfigurationList/DNS as Automatic -->
+                <key>AllowFailover</key>
+                <false/>
+                <key>DNSProtocol</key>
+                <string>TLS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>2001:db8:b0ba:10ee::853</string>
+                </array>
+                <!-- If you are using a public CA, you MUST not set an IPv6 address in RRsets. -->
+                <key>ServerName</key>
+                <string>dot.example.com</string>
+            </dict>
+            <!-- prefs:root=General&path=ManagedConfigurationList/DNS Automatic is not relevant -->
+            <key>OnDemandRules</key>
+            <array>
+                <dict>
+                    <key>Action</key>
+                    <string>EvaluateConnection</string>
+                    <key>InterfaceTypeMatch</key>
+                    <string>WiFi</string>
+                    <key>ActionParameters</key>
+                    <array>
+                        <dict>
+                            <key>DomainAction</key>
+                            <string>ConnectIfNeeded</string>
+                            <key>Domains</key>
+                            <array>
+                                <string>api.twitter.com</string>
+                                <string>x.com</string>
+                            </array>
+                        </dict>
+                    </array>
+                </dict>
+                <dict>
+                    <key>Action</key>
+                    <string>Disconnect</string>
+                </dict>
+            </array>
+            <key>PayloadDescription</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadDisplayName</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadIdentifier</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadUUID</key>
+            <string>c9f7ae3f-3e89-4c00-9dc6-10d7a29361de</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>supporting IPv6 by DoT</string>
+    <key>PayloadIdentifier</key>
+    <string>com.example.dot</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>7acd9e61-5bfa-44ef-8eb1-bfd585fe89a0</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>

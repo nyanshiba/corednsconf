@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>DNSSettings</key>
+            <dict>
+                <!-- MUST prefs:root=General&path=ManagedConfigurationList/DNS as Automatic -->
+                <key>AllowFailover</key>
+                <false/>
+                <key>DNSProtocol</key>
+                <string>TLS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>2001:db8:b0ba:10ee::853</string>
+                </array>
+                <!-- If you are using a public CA, you MUST not set an IPv6 address in RRsets. -->
+                <key>ServerName</key>
+                <string>dot.example.com</string>
+            </dict>
+            <!-- prefs:root=General&path=ManagedConfigurationList/DNS Automatic is not relevant -->
+            <key>OnDemandRules</key>
+            <array>
+                <dict>
+                    <key>Action</key>
+                    <string>Disconnect</string>
+                    <key>InterfaceTypeMatch</key>
+                    <string>WiFi</string>
+                    <key>SSIDMatch</key>
+                    <array>
+                        <string>ssid1</string>
+                        <string>ssid2</string>
+                    </array>
+                </dict>
+                <dict>
+                    <key>Action</key>
+                    <string>EvaluateConnection</string>
+                    <key>ActionParameters</key>
+                    <array>
+                        <dict>
+                            <!-- excluding Captive Portals -->
+                            <key>DomainAction</key>
+                            <string>NeverConnect</string>
+                            <key>Domains</key>
+                            <array>
+                                <string>www.gstatic.com</string>
+                                <string>connectivitycheck.gstatic.com</string>
+                                <string>clients3.google.com</string>
+                                <string>captive.apple.com</string>
+                                <string>detectportal.firefox.com</string>
+                            </array>
+                        </dict>
+                    </array>
+                </dict>
+            </array>
+            <key>PayloadDescription</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadDisplayName</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadIdentifier</key>
+            <string>com.example.dotpayload</string>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadUUID</key>
+            <string>758a2610-a8ce-42a0-9b80-8b278f47ffb7</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>Sinkhole DoT</string>
+    <key>PayloadIdentifier</key>
+    <string>com.example.dot</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>ca432cb7-eec2-459b-857e-58204d69bb00</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>
