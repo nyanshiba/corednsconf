@@ -164,7 +164,7 @@ ipinfo.io.:53 {
     #forward . 127.0.64.1:6453
     forward . 127.0.64.35:6453 # threat actor would be scared
 }
-assets.msn.com.:53 wifimireru.inonius.net.:53 {
+assets.msn.com.:53 wifimireru.inonius.net.:53 go.nature.com.:53 {
     import bind_dns64
     import nodata_https
     import nodata_a
