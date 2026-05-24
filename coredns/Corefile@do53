@@ -80,9 +80,14 @@ pool.ntp.org.:53 {
 }
 html-load.com.:53 {
     import bind_dns64
+    import nodata_https
+    import nodata_a
     loadbalance round_robin
     file /usr/local/etc/coredns/zone/html-load.com html-load.com. {
-        fallthrough fb.html-load.com.
+        fallthrough fb.html-load.com. fb.stg.html-load.com.
+    }
+    forward . 127.0.64.9:6453 { # nat64-on-link/tayga@qos
+        except fb.html-load.com.
     }
     forward . 127.0.6.1:1053
 }
@@ -91,6 +96,7 @@ html-load.com.:53 {
     import view_exclude_probe
     forward . 127.0.255.1:1153 {
         except fb.html-load.com.
+        except fb.stg.html-load.com.
     }
     forward . 127.0.6.1:1053
 }

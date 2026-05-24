@@ -534,6 +534,16 @@ v4flets-east.jp.:1053 {
         except css-load.com.
         except html-load.cc.
         except img-load.com.
+        except safe-load.xyz.
+        except ads.adthrive.com.
+        except tamealongpast.com.
+        except puzzledrally.com.
+        except gahfinallytame.com.
+        except boowithout.com.
+        except psstentice.com.
+        except providedwell.com.
+        except psstentice.com.
+        except angrilybefore.com.
 
         # whats-my-ip
         # https://github.com/Azure/Azure-Sentinel/blob/master/Solutions/GoogleCloudPlatformDNS/Analytic%20Rules/GCPDNSIpCheck.yaml

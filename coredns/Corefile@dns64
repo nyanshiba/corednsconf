@@ -29,6 +29,16 @@
     forward . 127.0.6.1:1053
 }
 .:6453 {
+    bind 127.0.64.9
+    multisocket 1
+    dns64 {
+        prefix 64:ff9b:1:9::/96
+        translate_all
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
+.:6453 {
     bind 127.0.64.10
     multisocket 1
     dns64 {
