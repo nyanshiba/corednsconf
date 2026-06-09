@@ -129,12 +129,13 @@ syosetu.com.:53 {
         policy round_robin
     }
 }
-a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 {
+a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 eol.jsc.nasa.gov.:53 {
     import bind_dns64
     import nodata_a
-    forward . 127.0.64.1:6453 127.0.64.3:6453 127.0.64.4:6453 127.0.64.10:6453 127.0.64.20:6453 127.0.64.35:6453 {
+    forward . 127.0.64.1:6453 127.0.64.4:6453 127.0.64.10:6453 127.0.64.20:6453 127.0.64.35:6453 127.0.6.1:1053 {
         policy round_robin
     }
+    rewrite continue ttl suffix . -0
 }
 
 # tayga@mitm
