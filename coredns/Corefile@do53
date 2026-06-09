@@ -183,6 +183,15 @@ assets.msn.com.:53 wifimireru.inonius.net.:53 go.nature.com.:53 merino.services.
 ## native
 
 
+# tayga@pp03
+## web
+teletest.es.:53 {
+    import bind_dns64
+    import nodata_https
+    forward . 127.0.64.3:6453
+}
+
+
 # tayga@tu10
 ## system
 
