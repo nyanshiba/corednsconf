@@ -251,6 +251,20 @@ copilot.microsoft.com.:53 rfc-editor.org.:53 apnic.net.:53 acm.org.:53 hcaptcha.
     forward . 127.0.64.35:6453 # force DNS64
 }
 
+
+# 2606:4700::/96
+discord.com.:53 {
+    import bind_dns64p
+    import nodata_https
+    import nodata_a
+    forward . 127.0.64.35:2653 { # eligibility API shows status 404
+        except streamkit.discord.com.
+        except updates.discord.com.
+        except support.discord.com.
+    }
+    forward . 127.0.64.35:6453
+}
+
 # other
 .:53 {
     import bind_private

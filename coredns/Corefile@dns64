@@ -2,6 +2,7 @@
     bind 127.0.64.1
     multisocket 1
     dns64 {
+        # Clients are routed to nyanshiba/nat64-on-link for each stateful connection.
         prefix 64:ff9b:1:1::/96
         translate_all
         allow_ipv4
@@ -58,10 +59,22 @@
     }
     forward . 127.0.6.1:1053
 }
+.:2653 {
+    bind 127.0.64.35
+    multisocket 1
+    dns64 {
+        # Clients are routed to Cloudflare's NAT64 via the default router.
+        # This is only useful if you are trying to break an API that does not support IPv6.
+        prefix 2606:4700::/96
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
 .:6453 {
     bind 127.0.64.35
     multisocket 1
     dns64 {
+        # For better performance, use the WARP Connector.
         prefix 64:ff9b:1:35::/96
         translate_all
         allow_ipv4

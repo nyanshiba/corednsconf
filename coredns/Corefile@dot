@@ -4,6 +4,14 @@
     tls /etc/coredns/tls/fullchain.pem /etc/coredns/tls/privkey.pem
     loadbalance round_robin
 }
+(nodata_a) {
+    # this disables IPv4 fallback as defined in RFC 8305.
+    rewrite continue type A NULL
+}
+(nodata_https) {
+    # disabling RFC 9460 Sec.7.3
+    rewrite continue type HTTPS NULL
+}
 
 # global local-zone
 tls://html-load.com.:853 {
@@ -13,6 +21,12 @@ tls://html-load.com.:853 {
         except fb.stg.html-load.com.
     }
     forward . 127.0.6.1:1053
+}
+tls://discord.com.:853 tls://cdn.cloudflare.net.:853 {
+    import bind_dot
+    import nodata_https
+    import nodata_a
+    forward . 127.0.64.35:2653
 }
 
 # other
@@ -45,4 +59,6 @@ tls://.:853 {
         except app.jrepoint.jp. # offline mode
     }
     forward . 127.0.255.0:1153
+    rewrite continue cname exact dynamic.x.com.cdn.cloudflare.net. dynamic.x.map.fastly.net.
+    rewrite continue cname suffix cdn.cloudflare.net. cdn.cloudflare.net.
 }
