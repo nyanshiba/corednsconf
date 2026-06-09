@@ -208,7 +208,7 @@ aftrmgmt.s.sdconw.com.:53 iij.ad.jp.:53 {
 
 # tayga@warp
 ## system
-challenges.cloudflare.com.:53 {
+challenges.cloudflare.com.:53 api.trycloudflare.com.:53 {
     import bind_dns64
     import nodata_https
     import nodata_a
