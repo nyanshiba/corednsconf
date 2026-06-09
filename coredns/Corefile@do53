@@ -93,6 +93,14 @@ pool.ntp.org.:53 {
     }
 }
 
+# nyanshiba/tailscale-entry-node
+ts.net.:53 {
+    import bind_ipv6ss
+    import bind_private
+    import view_exclude_probe
+    forward . 100.100.100.100:53
+}
+
 # DNS64 for forwarding to nyanshiba/nat64-on-link
 ## tayga@pp01 64:ff9b:1:1::/96
 sequoia.apple.com.:53 guzzoni.apple.com.:53 go.nature.com.:53 syosetu.com.:53 {
