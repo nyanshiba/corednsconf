@@ -1,3 +1,4 @@
+# tayga@pp01
 .:6453 {
     bind 127.0.64.1
     multisocket 1
@@ -9,6 +10,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@pp03
 .:6453 {
     bind 127.0.64.3
     multisocket 1
@@ -19,6 +22,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@tu00
 .:6453 {
     bind 127.0.64.4
     multisocket 1
@@ -29,6 +34,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@qos
 .:6453 {
     bind 127.0.64.9
     multisocket 1
@@ -39,6 +46,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@tu10
 .:6453 {
     bind 127.0.64.10
     multisocket 1
@@ -49,6 +58,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@tu20
 .:6453 {
     bind 127.0.64.20
     multisocket 1
@@ -59,6 +70,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# AS13335
 .:2653 {
     bind 127.0.64.35
     multisocket 1
@@ -70,6 +83,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@warp
 .:6453 {
     bind 127.0.64.35
     multisocket 1
@@ -81,6 +96,8 @@
     }
     forward . 127.0.6.1:1053
 }
+
+# tayga@mitm
 .:6453 {
     bind 127.0.64.80
     multisocket 1
