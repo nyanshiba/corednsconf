@@ -144,6 +144,9 @@ mitm.it.:53 {
     import nodata_https
     import nodata_a
     forward . 127.0.64.80:6453
+    log . {
+        class success
+    }
 }
 
 # tayga@pp01
