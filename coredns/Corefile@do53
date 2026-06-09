@@ -202,48 +202,8 @@ challenges.cloudflare.com.:53 {
     forward . 127.0.64.35:6453
 }
 ## native
-twitter.com.:53 x.com.:53 t.co.:53 proxsee-cf.pscp.tv.:53 cdn.cloudflare.net.:53 {
-    import bind_dns64p
-    import nodata_https
-    import nodata_a # force IPv6 to reduce ads
-    loadbalance round_robin
-    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
-        fallthrough
-    }
-    file /usr/local/etc/coredns/zone/x.com x.com. {
-        fallthrough
-    }
-    forward . 127.0.64.35:6453 {
-        except grok.x.com. # envoy's rate-limiting are too strict
-        except wr.x.com. # cname scrubbing from devices
-        except realm-a.x.com. # com.x.xchat AWS
-        except realm-b.x.com.
-    }
-    forward . 127.0.64.1:6453 127.0.64.4:6453 # bypass WARP Connector's CGNAT
-    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net. # DNS64 synthesis is performed in cdn.cloudflare.net.:53, not x.com.:53.
-}
-twimg.com.:53 {
-    import bind_dns64p
-    import nodata_https
-    import nodata_a
-    loadbalance round_robin
-    file /usr/local/etc/coredns/zone/twimg.com twimg.com. { # use Fastly
-        fallthrough
-    }
-    forward . 127.0.6.1:1053 {
-        except abs.twimg.com.
-        except abs-0.twimg.com.
-        except abs-zero.twimg.com.
-    }
-    forward . 127.0.64.35:6453 # force warp
-}
 
 ## web
-pximg.net.:53 pixiv.net.:53 pixiv.me.:53 fanbox.cc.:53 archive.org.:53 sciencedirectassets.com.:53 stackoverflow.com.:53 sstatic.net.:53 { # rewrite cname, BYOIP, AS209242, Dedicated Egress IP
-    import bind_dns64
-    dns64 64:ff9b:1:35::/96 # merge DNS64 and IPv6
-    forward . 127.0.6.1:1053
-}
 copilot.microsoft.com.:53 rfc-editor.org.:53 apnic.net.:53 acm.org.:53 hcaptcha.com.:53 gitlab.com.:53 hub.docker.com.:53 5ch.io.:53 jump5.ch.:53 dropboxstatic.com.:53 { # Privacy, broken IPv6, Latency
     import bind_dns64
     import nodata_https
@@ -304,6 +264,7 @@ discord.com.:53 {
         fallthrough
     }
     forward . 127.0.6.1:1053
+    rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net.
 }
 .:53 {
     import bind_private
