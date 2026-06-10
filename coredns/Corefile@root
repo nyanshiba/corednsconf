@@ -622,6 +622,7 @@ v4flets-east.jp.:1053 {
     # IPv6
     rewrite continue cname exact dynamic.x.com.cdn.cloudflare.net. dynamic.x.map.fastly.net.
     rewrite continue cname exact apac-asia-courier-4.push-apple.com.akadns.net. apac-asia-courier-vs.push-apple.com.akadns.net. # overwritten in zone/push-apple.com.akadns.net
+    rewrite continue cname exact us-courier-vs.push-apple.com.akadns.net. apac-asia-courier-vs.push-apple.com.akadns.net.
     ## https://codeberg.org/IPv6-Monostack/delegacy-rpz/#2-primary-with-zonefile
     rewrite continue cname exact reddit.map.fastly.net. dualstack.reddit.map.fastly.net.
     rewrite continue cname exact h2.twitch.map.fastly.net. dualstack.h2.twitch.map.fastly.net.
