@@ -142,7 +142,7 @@ ipinfo.io.:53 challenges.cloudflare.com.:53 api.trycloudflare.com.:53 copilot.mi
 }
 
 ## AS13335 2606:4700::/96
-discord.com.:53 {
+discord.com.:53 abs.twimg.com.cdn.cloudflare.net.:53 {
     import bind_dns64p
     import nodata_https
     import nodata_a

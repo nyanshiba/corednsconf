@@ -9,9 +9,8 @@ $TTL 10800
         300        ; Minimum (5 minutes)
 )
 
-@                       10800  IN  NS    dns.internal.
-
 ; IPv6
+abs.twimg.com. 300 IN CNAME abs.twimg.com.cdn.cloudflare.net.
 pbs.twimg.com. 300 IN A 199.232.240.159
 pbs.twimg.com. 300 IN A 146.75.112.159
 pbs.twimg.com. 300 IN AAAA 2a04:4e42:8c::157
