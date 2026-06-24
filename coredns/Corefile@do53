@@ -188,6 +188,19 @@ mitm.it.:53 {
         class success
     }
 }
+claude.ai.:53 anthropic.com.:53 claude.com.:53 {
+    import bind_dns64p
+    import nodata_https
+    import nodata_a
+    forward s-cdn.anthropic.com. 127.0.64.1:6453 # bypass Envoy via tayga@pp01 (LBO)
+    forward . 127.0.64.35:6453 { # bypass Cloudflare IPv4 via tayga@warp (LBO)
+    #forward . 127.0.64.80:6453 { # enforce anthropic-allowed-org-ids
+        except a-cdn.anthropic.com. # IPv6 or NAT44 (LBO)
+        except a-cdn.claude.ai.
+        except assets.claude.ai.
+    }
+    forward . 127.0.6.1:1053
+}
 
 ## GeoIP
 assets.msn.com.:53 wifimireru.inonius.net.:53 merino.services.mozilla.com.:53 {
