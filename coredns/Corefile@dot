@@ -61,4 +61,7 @@ tls://.:853 {
     forward . 127.0.255.0:1153
     rewrite continue cname exact dynamic.x.com.cdn.cloudflare.net. dynamic.x.map.fastly.net.
     rewrite continue cname suffix cdn.cloudflare.net. cdn.cloudflare.net.
+    rewrite stop name suffix 2ch.net. 5ch.io. answer auto
+    rewrite stop name suffix 5ch.net. 5ch.io. answer auto
+    rewrite stop name suffix gigafile.nu. gigafile.jp. answer auto
 }

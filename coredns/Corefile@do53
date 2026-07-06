@@ -79,20 +79,6 @@ pool.ntp.org.:53 {
     rewrite stop name regex .* ntp.internal. answer auto # on-link
 }
 
-# global local-zone
-5ch.net.:53 2ch.net.:53 {
-    import bind_private
-    import view_exclude_probe
-    template IN HTTPS {
-      match "(\w+)\.[25]ch\.net\.$"  
-      answer  "{{ index .Match 1 }}.{{ .Zone }} 900 IN HTTPS 0 {{ index .Match 1 }}.5ch.io."
-        authority "{{ .Name }} 900 IN SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
-    }
-    template ANY ANY {
-        authority "{{ .Name }} 900 {{ .Class }} SOA rfc9460.{{ .Zone }} hostmaster.{{ .Zone }} 1 60 1200 604800 60"
-    }
-}
-
 # nyanshiba/tailscale-entry-node
 ts.net.:53 {
     import bind_ipv6ss
@@ -265,6 +251,9 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 eol.jsc.nasa.gov.:53 {
     }
     forward . 127.0.6.1:1053
     rewrite continue cname exact dynamic.x.map.fastly.net. dynamic.x.com.cdn.cloudflare.net.
+    rewrite stop name suffix 2ch.net. 5ch.io. answer auto
+    rewrite stop name suffix 5ch.net. 5ch.io. answer auto
+    rewrite stop name suffix gigafile.nu. gigafile.jp. answer auto
 }
 .:53 {
     import bind_private
