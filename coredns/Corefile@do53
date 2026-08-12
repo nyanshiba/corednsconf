@@ -10,13 +10,6 @@
 }
 (bind_ipv4) {
     bind 10.0.8.53
-    multisocket 1
-    rewrite continue ttl suffix . 30-
-}
-(bind_private) {
-    bind ::1
-    bind 127.0.0.1
-    bind 10.0.8.53
     bind 1.0.0.1
     bind 1.1.1.1
     bind 8.8.4.4
@@ -42,24 +35,15 @@
     bind 204.194.234.200
     bind 223.5.5.5
     bind 223.6.6.6
-    multisocket 1
-    rewrite continue ttl suffix . 30-
-}
-(acl_refused_server) {
-    acl {
-        allow type A net 10.0.0.12/32 # vpn
-        block type A net 10.0.0.0/24
-        allow type A net 10.0.2.12/32 # vpn
-        allow type A net 10.0.2.35/32 # Intel Dual Band Wirelless-AC 7265 rev. D does not support IPv6 DNS
-        block type A net 10.0.2.0/24
-        block type A net 10.0.5.0/24
-        block type A net 10.0.6.0/23
-        block type A net 10.0.8.0/21
-    }
 }
 (view_exclude_probe) {
     view exclude_probe {
         expr client_ip() != '10.0.1.6' #&& client_ip() != '10.0.0.2'
+    }
+}
+(view_include_probe) {
+    view include_probe {
+        expr client_ip() == '10.0.1.6'
     }
 }
 (nodata_a) {
@@ -71,18 +55,23 @@
     rewrite continue type HTTPS NULL
 }
 pool.ntp.org.:53 {
+    import bind_dns64
     import bind_ipv6ss
-    import bind_private
+    import bind_ipv4
     import view_exclude_probe
-    forward . 127.0.0.1:53
-    rewrite stop name regex .*.datadog.pool.ntp.org. ntp.flets. answer auto # off-link
-    rewrite stop name regex .* ntp.internal. answer auto # on-link
+    file /usr/local/etc/coredns/zone/home.arpa home.arpa.
+    file /usr/local/etc/coredns/zone/flets flets.
+    forward www.pool.ntp.org. 127.0.6.1:1053
+    rewrite stop name regex .*.datadog.pool.ntp.org. ntp.home.arpa. answer auto # off-link
+    rewrite stop name regex www.pool.ntp.org. www.pool.ntp.org. answer auto # on-link
+    rewrite stop name regex .* ntp.home.arpa. answer auto # on-link
 }
 
 # nyanshiba/tailscale-entry-node
 ts.net.:53 {
+    import bind_dns64
     import bind_ipv6ss
-    import bind_private
+    import bind_ipv4
     import view_exclude_probe
     forward . 100.100.100.100:53
 }
@@ -212,10 +201,9 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 eol.jsc.nasa.gov.:53 {
 }
 
 # other
+## client (DHCPv6 RDNSS)
 .:53 {
-    import bind_private
-    import view_exclude_probe
-    import acl_refused_server
+    import bind_dns64
     # internals
     file /usr/local/etc/coredns/zone/ipv4only.arpa ipv4only.arpa.
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
@@ -255,35 +243,57 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com.:53 eol.jsc.nasa.gov.:53 {
     rewrite stop name suffix 5ch.net. 5ch.io. answer auto
     rewrite stop name suffix gigafile.nu. gigafile.jp. answer auto
 }
+## probe (DHCPv4)
 .:53 {
-    import bind_private
-    forward . 127.0.6.2:1053
-}
-.:53 {
-    import bind_ipv6ss
-    view qtypefilter {
-        expr type() == 'AAAA'
-    }
+    import bind_ipv4
+    import view_include_probe
     multisocket 1
     rewrite continue ttl suffix . 30-
-    file /usr/local/etc/coredns/zone/internal ntp.internal.
-    file /usr/local/etc/coredns/zone/com com. {
-        fallthrough
-    }
-    forward . 127.0.6.1:1053
+    forward . 127.0.6.2:1053 # bypass sinkhole
 }
+## server (DHCPv4) IN A
 .:53 {
+    import bind_ipv4
     import bind_ipv6ss
     multisocket 1
+    rewrite continue ttl suffix . 30-
+    view qtypefilter {
+        expr type() == 'A' && !(incidr(client_ip(), '10.0.0.0/22') || incidr(client_ip(), '10.0.4.0/24') || client_ip() == '10.0.8.64')
+    }
     file /usr/local/etc/coredns/zone/home.arpa home.arpa.
     forward . 127.0.255.0:1153 {
         # whitelisted IPv4 single-stack services
+        except discord.com.
         except github.com.
         except api.minecraftservices.com.
         except sessionserver.mojang.com.
+        except dot.net.
+        except ripe.net.
         except speedtest.net.
         except ghcr.io.
+        except discord.gg.
         except ftp.riken.jp.
+        except spamhaus.org.
+        except spamhaus.org.cdn.cloudflare.net.
+    }
+    forward . 127.0.6.1:1053
+}
+## server IN AAAA/HTTPS or client (DHCPv4, IPCP)
+.:53 {
+    import bind_ipv4
+    import bind_ipv6ss
+    multisocket 1
+    rewrite continue ttl suffix . 30-
+    minimal # disabling AS4717's RFC 9460 Sec.4.2 support
+    file /usr/local/etc/coredns/zone/home.arpa home.arpa.
+    file /usr/local/etc/coredns/zone/twitter.com twitter.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/x.com x.com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
     }
     forward . 127.0.6.1:1053
 }
