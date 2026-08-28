@@ -97,6 +97,25 @@
     forward . 127.0.6.1:1053
 }
 
+# AS150369
+.:6453 {
+    bind 127.0.64.50
+    multisocket 1
+    dns64 {
+        translate_all
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
+.:6653 {
+    bind 127.0.64.50
+    multisocket 1
+    dns64 {
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
+
 # AS16509
 .:2653 {
     bind 127.0.64.65

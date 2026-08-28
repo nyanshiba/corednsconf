@@ -162,6 +162,31 @@ discord.com. abs.twimg.com.cdn.cloudflare.net. {
     forward . 127.0.64.35:6453
 }
 
+## AS150369 east
+## https://bgp.tools/ixp/BBIX+Tokyo
+apple-dns.net. aaplimg.com., # AS714
+impress.co.jp. pximg.net., # AS4694
+github.com. microsoft.com., # AS8075
+yahoo.co.jp. yimg.jp. yahooapis.jp., # AS23816 AS24572 AS38631
+cdn.hf.co. integrate.api.nvidia.com. api.tokenrouter.com. mcp.firecrawl.dev. { # AS16509 AS396982
+    import bind_dns64
+    import bind_ipv6ss
+    import nodata_https
+    import nodata_a
+    forward . 127.0.64.50:6653 { # DNS64 or IPv6
+        except us-eu.fastly.net.
+        except ssl.fastly.net. # global.
+    }
+    forward . 127.0.6.1:1053
+}
+fastly.net. fastly-masque.net. godfield.net. { # AS54113
+    import bind_dns64
+    import bind_ipv6ss
+    import nodata_https
+    import nodata_a
+    forward . 127.0.64.50:6453 # force DNS64
+}
+
 ## AS16509 2600:9000:2219::/96
 cloudfront.net. figma.com. note.com. st-note.com. hatenablog.com. st-hatena.com. b.hatena.ne.jp. hatelabo.jp. connpass.com. {
     import bind_dns64
@@ -287,7 +312,10 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com. eol.jsc.nasa.gov. {
     rewrite stop name suffix 5ch.net. 5ch.io. answer auto
     rewrite stop name suffix gigafile.nu. gigafile.jp. answer auto
     ## for DNS64
+    rewrite continue cname suffix apple-dns.net. apple-dns.net.
+    rewrite continue cname suffix aaplimg.com. aaplimg.com.
     rewrite continue cname suffix cloudfront.net. cloudfront.net.
+    rewrite continue cname suffix fastly.net. fastly.net.
     ## ECS
     rewrite continue cname suffix akadns.net. akadns.net.
     rewrite continue cname suffix akamai.net. akamai.net.
@@ -343,6 +371,9 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com. eol.jsc.nasa.gov. {
         fallthrough
     }
     file /usr/local/etc/coredns/zone/com com. {
+        fallthrough
+    }
+    file /usr/local/etc/coredns/zone/jp jp. {
         fallthrough
     }
     forward . 127.0.6.1:1053

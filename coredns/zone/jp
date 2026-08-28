@@ -13,3 +13,4 @@ $TTL 10800
 
 ; IPv6
 skeb.jp. 900 IN CNAME dualstack.n.sni.global.fastly.net.
+ameblo.jp. 900 IN CNAME dualstack.d.sni.global.fastly.net.
