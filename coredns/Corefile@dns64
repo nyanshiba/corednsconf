@@ -97,6 +97,58 @@
     forward . 127.0.6.1:1053
 }
 
+# AS16509
+.:2653 {
+    bind 127.0.64.65
+    multisocket 1
+    dns64 {
+        # https://codeberg.org/IPv6-Monostack/delegacy-rpz/src/branch/main/DNS64.md#aws-cloudfront
+        # https://qiita.com/saitotak/items/f56234d0506b47ddbcfe#data
+        #prefix 2600:9000:2751::/96 # x-amz-cf-pop: NRT12-P2 ~57MB/s on us.aws.cdn.hf.co.
+        #prefix 2600:9000:274f::/96 # NRT12-P1
+        #prefix 2600:9000:2752::/96 # NRT12-P2
+        #prefix 2600:9000:221b::/96 # NRT12-P3
+        #prefix 2600:9000:2772::/96 # NRT12-P3
+        #prefix 2600:9000:26ef::/96 # NRT12-P4
+        #prefix 2600:9000:26f2::/96 # NRT12-P5
+        #prefix 2600:9000:21b7::/96 # NRT12-P6
+        #prefix 2600:9000:2954::/96 # NRT12-P8
+        #prefix 2600:9000:2957::/96 # NRT12-P9
+        #prefix 2600:9000:2219::/96 # NRT57-P1 ~50MB/s
+        #prefix 2600:9000:221a::/96 # NRT57-P2
+        #prefix 2600:9000:2224::/96 # NRT57-P4 ~50MB/s
+        #prefix 2600:9000:2352::/96 # NRT57-P4
+        #prefix 2600:9000:221c::/96 # NRT57-P4 ~50MB/s
+        #prefix 2600:9000:282b::/96 # NRT57-P6
+        #prefix 2600:9000:21b5::/96 # NRT57-P7
+        #prefix 2600:9000:20c4::/96 # NRT57-P9
+        #prefix 2600:9000:2142::/96 # NRT57-P10
+        #prefix 2600:9000:2025::/96 # NRT57-P11
+        # https://securitytrails.com/list/apex_domain/nrt20-p1.cloudfront.net
+        #prefix 2600:9000:26a6::/96 # NRT20-P1
+        #prefix 2600:9000:26a7::/96 # NRT20-P2
+        #prefix 2600:9000:27af::/96 # NRT20-P3
+        #prefix 2600:9000:27b6::/96 # NRT20-P5 #
+        #prefix 2600:9000:21d2::/96 # NRT20-P7
+        #prefix 2600:9000:295a::/96 # NRT20-P8 ~53MB/s
+        prefix 2600:9000:295d::/96 # NRT20-P9 ~66MB/s
+        #prefix 2600:9000:221d::/96 # KIX50-P1
+        #prefix 2600:9000:221f::/96 # KIX50-P3
+        #prefix 2600:9000:26a8::/96 # KIX56-P1
+        #prefix 2600:9000:26aa::/96 # KIX56-P3
+        #prefix 2600:9000:2138::/96 # KIX56-P4
+        #prefix 2600:9000:2112::/96 # KIX56-P5
+        #prefix 2600:9000:2216::/96 # KIX82-P1
+        #prefix 2600:9000:2218::/96 # KIX82-P2
+        #prefix 2600:9000:21b6::/96 # KIX82-P4
+        #prefix 2600:9000:208e::/96 # KIX82-P5
+        #prefix 2600:9000:21ee::/96 # KIX82-P7
+        translate_all
+        allow_ipv4
+    }
+    forward . 127.0.6.1:1053
+}
+
 # tayga@mitm
 .:6453 {
     bind 127.0.64.80
