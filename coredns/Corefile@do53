@@ -138,15 +138,24 @@ aftrmgmt.s.sdconw.com. iij.ad.jp. {
     forward . 127.0.64.20:6453
 }
 
-# tayga@warp 64:ff9b:1:35::/96
-ipinfo.io. challenges.cloudflare.com. api.trycloudflare.com. copilot.microsoft.com. rfc-editor.org. apnic.net. acm.org. hcaptcha.com. gitlab.com. hub.docker.com. 5ch.io. jump5.ch. dropboxstatic.com. { # Privacy, broken IPv6, Latency
-    import bind_dns64
+## tayga@warp 64:ff9b:1:35::/96
+challenges.cloudflare.com. dap.pat-issuer.cloudflare.com., # Automatically pass the Turnstile
+cdn.cloudflare.net. pacloudflare.com. cloudflareaccess.com. turn.cloudflare.com. opencode.ai. openrouter.ai. search.parallel.ai. mcp.exa.ai. chatgpt.com. copilot.microsoft.com. apnic.net. gitlab.com. hcaptcha.com. geoguessr.com., # Reduce latency
+trycloudflare.com., # Avoid 429 Too Many Requests when creating Quick Tunnels.
+ipinfo.io. deepseek.com. d75677d1.ap-northeast-1.token.awswaf.com. 5ch.io. jump5.ch. dropboxstatic.com. filmot.com., # Privacy
+rfc-editor.org. { # Fix broken IPv6
+    import bind_dns64 # allow cat, human
+    import bind_ipv6ss # allow server, agents
     import nodata_https
-    import nodata_a
+    import nodata_a # force DNS64
     file /usr/local/etc/coredns/zone/io io. {
         fallthrough
     }
-    forward . 127.0.64.35:6453 # force DNS64
+    forward . 127.0.64.35:6453 {
+        except learn.chatgpt.com. # Vercel
+        except hub.docker.com.cdn.cloudflare.net. # https://docs.docker.com/docker-hub/usage/
+    }
+    forward . 127.0.6.1:1053
 }
 
 ## AS13335 2606:4700::/96
