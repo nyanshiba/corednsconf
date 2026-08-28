@@ -88,6 +88,17 @@ pool.ntp.org. {
     rewrite stop name regex www.pool.ntp.org. www.pool.ntp.org. answer auto # on-link
     rewrite stop name regex .* ntp.home.arpa. answer auto # on-link
 }
+# https://www.e-ontap.com/blog/
+www.e-ontap.com. {
+    import bind_ipv4
+    view pdnsfilter {
+        expr server_ip() in ['1.1.1.1', '8.8.8.8']
+    }
+    template IN ANY {
+        answer "{{.Name}} 1800 IN CNAME is02.reflection.co.jp."
+        ederror 4
+    }
+}
 
 # nyanshiba/tailscale-entry-node
 ts.net. {
