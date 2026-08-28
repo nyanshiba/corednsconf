@@ -275,6 +275,10 @@ a2b59aaaf70266dcf.awsglobalaccelerator.com. eol.jsc.nasa.gov. {
     rewrite stop name suffix 2ch.net. 5ch.io. answer auto
     rewrite stop name suffix 5ch.net. 5ch.io. answer auto
     rewrite stop name suffix gigafile.nu. gigafile.jp. answer auto
+    ## ECS
+    rewrite continue cname suffix akadns.net. akadns.net.
+    rewrite continue cname suffix akamai.net. akamai.net.
+    rewrite continue cname suffix akamaiedge.net. akamaiedge.net.
 }
 ## probe (DHCPv4)
 . {

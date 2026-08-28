@@ -10,6 +10,10 @@
         class error
     }
     bufsize 1426 # 1454-20-8
+    # override Client Subnet (see RFC 7871 Sec.6)
+    #rewrite continue edns0 local set 0x0008 0x0002200020010db8 revert # /32
+    rewrite continue edns0 local set 0x0008 0x0002300020010db8b0ba revert # /48
+    #rewrite continue edns0 local set 0x0008 0x0002380020010db8b0ba10 revert # /56
 }
 flets-east.jp.:1053 iptvf.jp.:1053 4over6.info.:1053 {
     import bind_upstream
@@ -26,6 +30,23 @@ v4flets-east.jp.:1053 {
         max_fails 0
         failover SERVFAIL
     }
+}
+akadns.net.:1053 akamai.net.:1053 akamaiedge.net.:1053 {
+    import bind_upstream
+    bind 127.0.6.2
+    file /usr/local/etc/coredns/zone/push-apple.com.akadns.net push-apple.com.akadns.net. {
+        fallthrough
+    }
+    forward . tls://[] tls://[] { # #7970 DoH not supported
+        policy sequential # round_robin uses 2 connections in 1 query
+        tls_servername xxxxxxxxxx.cloudflare-gateway.com
+        max_connect_attempts 1
+        #expire 10s # cannot change in DoT and occurs TCP FIN, PSH, ACK after 10s
+        health_check 1m no_rec
+
+        except whoami.akamai.net.
+    }
+    forward . 127.0.255.0:1153
 }
 # always_nodata with SOA
 .:1153 {
@@ -70,9 +91,6 @@ v4flets-east.jp.:1053 {
     }
 
     # for rewrite
-    file /usr/local/etc/coredns/zone/push-apple.com.akadns.net push-apple.com.akadns.net. {
-        fallthrough
-    }
     file /usr/local/etc/coredns/zone/map.fastly.net map.fastly.net. {
         fallthrough
     }
