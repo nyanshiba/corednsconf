@@ -121,10 +121,17 @@ sequoia.apple.com. guzzoni.apple.com. go.nature.com. syosetu.com. {
     forward . 127.0.6.1:1053 # NAT44
 }
 
-# tayga@pp03 64:ff9b:1:3::/96
+## tayga@pp03 64:ff9b:1:3::/96
 teletest.es. {
     import bind_dns64
     import nodata_https
+    import nodata_a
+    forward . 127.0.64.3:6453
+}
+location.tools.nhk. {
+    import bind_ipv6ss # AI agents do not hold authentication credentials; all that is required is text.
+    import nodata_https
+    import nodata_a
     forward . 127.0.64.3:6453
 }
 
